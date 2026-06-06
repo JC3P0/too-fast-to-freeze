@@ -1,0 +1,107 @@
+[gd_scene load_steps=16 format=3 uid="uid://dtqjpg20jqtkv"]
+
+[ext_resource type="Script" uid="uid://cbflemreqti4r" path="res://Game/Player/player.gd" id="1_ih0iw"]
+[ext_resource type="PackedScene" uid="uid://bntvw807yp6np" path="res://Assets/Blender/Player4.blend" id="2_gb67c"]
+[ext_resource type="Script" uid="uid://crkuxkl0j5okf" path="res://Game/Player/States/player_state_manager.gd" id="3_852li"]
+[ext_resource type="PackedScene" uid="uid://ctvfpofgfhexe" path="res://Game/Player/Trails/hard_trail_particles.tscn" id="3_j3gwb"]
+[ext_resource type="Script" uid="uid://bf37tspueqq3e" path="res://Game/Player/States/player_helper.gd" id="3_r87qv"]
+[ext_resource type="PackedScene" uid="uid://b67nptry8ud3w" path="res://Game/Player/Trails/snow_trail_idle.tscn" id="4_ssr2j"]
+[ext_resource type="Script" uid="uid://d4ijrcwtesf68" path="res://Game/Player/States/idle_state.gd" id="5_36an1"]
+[ext_resource type="PackedScene" uid="uid://y68uqxs5wuap" path="res://Game/Player/Trails/soft_trail_particles.tscn" id="5_ej26e"]
+[ext_resource type="Script" uid="uid://svbaqotdlx50" path="res://Game/Player/States/soft_turn.gd" id="6_xtbkq"]
+[ext_resource type="Script" uid="uid://c5pwf874ebtol" path="res://Game/Player/States/hard_turn.gd" id="7_ej8a5"]
+[ext_resource type="Script" uid="uid://cdmslms8vieei" path="res://Game/Player/States/stop_turn.gd" id="8_ejxtu"]
+[ext_resource type="Script" uid="uid://dqmw12usdlw01" path="res://Game/Player/States/jump.gd" id="9_ubqs3"]
+[ext_resource type="Script" uid="uid://didepfturi7rt" path="res://Game/Player/States/vulnerable.gd" id="13_25frb"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54qhv"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1w2v0"]
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_ih0iw")
+ACC_RATE = 5.0
+IDLE_MAX_SPEED = 35.0
+ROTATION_SPEED = 5.0
+SOFT_ROTATION_ANGLE = 35.0
+SOFT_MAX_SPEED = 15.0
+SOFT_TURN_SPEED = 10.0
+HARD_ROTATION_ANGLE = 45.0
+HARD_MAX_SPEED = 5.0
+HARD_TURN_SPEED = 15.0
+STOP_ROTATION_ANGLE = 90.0
+JUMP_HEIGHT = 2.0
+JUMP_DURATION = 1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.186668, 1, 0)
+shape = SubResource("CapsuleShape3D_54qhv")
+
+[node name="Player4" parent="." instance=ExtResource("2_gb67c")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="Skeleton3D" parent="Player4/Armature" index="0"]
+bones/0/position = Vector3(0, -0.0106388, 0)
+bones/0/rotation = Quaternion(0.00525347, 0, -1.1665e-18, 0.999986)
+bones/1/rotation = Quaternion(-0.0646343, -1.76144e-24, 1.43517e-17, 0.997909)
+bones/2/rotation = Quaternion(8.43187e-08, 8.43009e-08, -0.762365, 0.647147)
+bones/3/rotation = Quaternion(0.140357, -0.727946, 0.170609, 0.649067)
+bones/4/rotation = Quaternion(0.0446356, 0.0444178, -0.0132046, 0.997928)
+bones/6/rotation = Quaternion(8.43187e-08, -8.43009e-08, 0.762365, 0.647147)
+bones/7/rotation = Quaternion(0.140356, 0.727946, -0.170609, 0.649067)
+bones/8/rotation = Quaternion(0.0446357, -0.0444178, 0.0132046, 0.997928)
+bones/10/rotation = Quaternion(0.605867, 0.259364, 0.658196, -0.363915)
+bones/10/scale = Vector3(1, 1, 1)
+bones/11/rotation = Quaternion(-0.033531, -0.743686, 0.0393936, 0.666524)
+bones/12/rotation = Quaternion(1.39698e-09, -6.60467e-18, -1.42609e-08, 1)
+bones/13/rotation = Quaternion(0.605867, -0.259364, -0.658196, -0.363915)
+bones/13/scale = Vector3(1, 1, 1)
+bones/14/rotation = Quaternion(-0.033531, 0.743686, -0.0393936, 0.666524)
+bones/15/rotation = Quaternion(4.65661e-10, 5.88903e-17, 7.33417e-09, 1)
+
+[node name="hard_trail_particles" parent="." instance=ExtResource("3_j3gwb")]
+
+[node name="snow_trail_idle" parent="." instance=ExtResource("4_ssr2j")]
+
+[node name="soft_trail_particles" parent="." instance=ExtResource("5_ej26e")]
+
+[node name="Player_state_manager" type="Node" parent="."]
+script = ExtResource("3_852li")
+
+[node name="PlayerHelper" type="Node" parent="Player_state_manager"]
+script = ExtResource("3_r87qv")
+
+[node name="idle_state" type="Node" parent="Player_state_manager"]
+script = ExtResource("5_36an1")
+
+[node name="soft_turn" type="Node" parent="Player_state_manager"]
+script = ExtResource("6_xtbkq")
+
+[node name="hard_turn" type="Node" parent="Player_state_manager"]
+script = ExtResource("7_ej8a5")
+
+[node name="stop_turn" type="Node" parent="Player_state_manager"]
+script = ExtResource("8_ejxtu")
+
+[node name="jump" type="Node" parent="Player_state_manager"]
+script = ExtResource("9_ubqs3")
+
+[node name="vulnerable" type="Node" parent="Player_state_manager"]
+script = ExtResource("13_25frb")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08927, -0.197857)
+shape = SubResource("CapsuleShape3D_1w2v0")
+
+[node name="HurtTimer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
+
+[editable path="Player4"]

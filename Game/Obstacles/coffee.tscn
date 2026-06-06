@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://drr0wm3wujyun"]
+
+[ext_resource type="Script" uid="uid://dc6jrmhccuxwm" path="res://Game/Obstacles/obstacle_move.gd" id="1_pqlxo"]
+[ext_resource type="PackedScene" uid="uid://xyk6y8coy6mn" path="res://Assets/Blender/Coffee.blend" id="1_qdq22"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_2ob1l"]
+radius = 1.228
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e3l8t"]
+radius = 2.0
+height = 6.0
+
+[node name="Coffee" type="CharacterBody3D" groups=["Coffee"]]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_pqlxo")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.04151, 0)
+shape = SubResource("CylinderShape3D_2ob1l")
+
+[node name="Coffee" parent="." instance=ExtResource("1_qdq22")]
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_e3l8t")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

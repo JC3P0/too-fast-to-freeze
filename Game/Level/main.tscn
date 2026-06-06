@@ -1,0 +1,158 @@
+[gd_scene load_steps=18 format=3 uid="uid://cckpfdqh4f1cj"]
+
+[ext_resource type="Texture2D" uid="uid://dy3wdmpxyab5d" path="res://Assets/Textures/Snow/7/7_diffuseOriginal.bmp" id="1_flw52"]
+[ext_resource type="PackedScene" uid="uid://dtqjpg20jqtkv" path="res://Game/Player/Player.tscn" id="1_ix8k8"]
+[ext_resource type="Script" uid="uid://b6jcxkh2kam87" path="res://Game/Level/floor.gd" id="1_jn3mv"]
+[ext_resource type="Texture2D" uid="uid://h6hf8pxygdh4" path="res://Assets/Textures/Snow/7/7_height.bmp" id="2_6mbeq"]
+[ext_resource type="PackedScene" uid="uid://18yehieu3brv" path="res://Game/Level/Spawner/spawner.tscn" id="2_ugmdt"]
+[ext_resource type="Script" uid="uid://c4p5ws4ij74wf" path="res://Game/Level/control.gd" id="2_ute07"]
+[ext_resource type="Texture2D" uid="uid://bb26gd7wuw0dy" path="res://Assets/Textures/Snow/7/7_metallic.bmp" id="3_ea6fa"]
+[ext_resource type="Script" uid="uid://dfnu41k3ww6vf" path="res://Game/Level/camera_3d.gd" id="3_m5af0"]
+[ext_resource type="Texture2D" uid="uid://kp1yy28slljc" path="res://Assets/Textures/Snow/7/7_normal.bmp" id="4_7taih"]
+[ext_resource type="Texture2D" uid="uid://j0oau1manjoh" path="res://Assets/PNG/ICE_PROG_OVER.png" id="7_a4ahd"]
+[ext_resource type="Texture2D" uid="uid://bhmxwonbfnjbd" path="res://Assets/PNG/ICE_PROG.png" id="8_5t3sy"]
+[ext_resource type="PackedScene" uid="uid://ce8bjp12uxn7a" path="res://Game/Level/snow_fall.tscn" id="11_gjw61"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kgrb6"]
+albedo_texture = ExtResource("1_flw52")
+metallic = 1.0
+metallic_texture = ExtResource("3_ea6fa")
+normal_enabled = true
+normal_texture = ExtResource("4_7taih")
+heightmap_enabled = true
+heightmap_texture = ExtResource("2_6mbeq")
+uv1_scale = Vector3(0.09, 0.09, 0.09)
+uv1_triplanar = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_k7grm"]
+size = Vector2(80, 300)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_4ud2c"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yc0i2"]
+size = Vector3(1, 6.46594, 5.09808)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_emgxo"]
+size = Vector2(150, 300)
+
+[node name="Main" type="Node3D"]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+script = ExtResource("1_jn3mv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+material_override = SubResource("StandardMaterial3D_kgrb6")
+mesh = SubResource("PlaneMesh_k7grm")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("WorldBoundaryShape3D_4ud2c")
+
+[node name="Player" parent="." instance=ExtResource("1_ix8k8")]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 127.0
+offset_bottom = 105.0
+script = ExtResource("2_ute07")
+
+[node name="PanelContainer" type="PanelContainer" parent="Control"]
+layout_mode = 0
+offset_top = 63.0
+offset_right = 134.0
+offset_bottom = 115.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer"]
+layout_mode = 2
+
+[node name="SpeedContainer" type="HBoxContainer" parent="Control/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="Control/PanelContainer/VBoxContainer/SpeedContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Speed : 
+"
+
+[node name="SpeedCurrent" type="Label" parent="Control/PanelContainer/VBoxContainer/SpeedContainer"]
+layout_mode = 2
+text = "00
+"
+
+[node name="DistanceContainer" type="HBoxContainer" parent="Control/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DistanceLabel" type="Label" parent="Control/PanelContainer/VBoxContainer/DistanceContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Distance : 
+"
+
+[node name="DistanceCurrent" type="Label" parent="Control/PanelContainer/VBoxContainer/DistanceContainer"]
+layout_mode = 2
+text = "00
+"
+
+[node name="FreezeProgressBar" type="TextureProgressBar" parent="Control"]
+custom_minimum_size = Vector2(448, 48)
+layout_mode = 0
+offset_left = 351.0
+offset_right = 799.0
+offset_bottom = 48.0
+max_value = 60.0
+step = 0.01
+nine_patch_stretch = true
+texture_over = ExtResource("7_a4ahd")
+texture_progress = ExtResource("8_5t3sy")
+
+[node name="FreezeTimer" type="Timer" parent="Control"]
+wait_time = 60.0
+one_shot = true
+autostart = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.987658, 0.156624, 0, -0.156624, 0.987658, 0, 3.7123, 4.54726)
+script = ExtResource("3_m5af0")
+
+[node name="Spawner" parent="." instance=ExtResource("2_ugmdt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -150)
+
+[node name="MarkerA" parent="Spawner" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 0)
+
+[node name="MarkerB" parent="Spawner" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, 0)
+
+[node name="CollisionShape3D" parent="Spawner/Despawner" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.777428, 0.79557, 212.739)
+
+[node name="snow_fall" parent="." instance=ExtResource("11_gjw61")]
+
+[node name="right_barier" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="right_barier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.50474, 2.73297, -0.532562)
+shape = SubResource("BoxShape3D_yc0i2")
+
+[node name="left_barier" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="left_barier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.733, 0.533)
+shape = SubResource("BoxShape3D_yc0i2")
+
+[node name="WallHolder" type="Node3D" parent="."]
+
+[node name="Wall" type="MeshInstance3D" parent="WallHolder"]
+transform = Transform3D(0.707107, -0.707107, 0, 0.707107, 0.707107, 0, 0, 0, 1, 40.3646, 0, -1)
+mesh = SubResource("PlaneMesh_emgxo")
+skeleton = NodePath("../..")
+
+[node name="Wall2" type="MeshInstance3D" parent="WallHolder"]
+transform = Transform3D(0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0, 1, -39.6354, 0, -1)
+mesh = SubResource("PlaneMesh_emgxo")
+skeleton = NodePath("../..")
+
+[editable path="Spawner"]

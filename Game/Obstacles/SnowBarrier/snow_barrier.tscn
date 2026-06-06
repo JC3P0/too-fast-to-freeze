@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://da4ygliw35cqm"]
+
+[ext_resource type="Script" uid="uid://dc6jrmhccuxwm" path="res://Game/Obstacles/obstacle_move.gd" id="1_wwtxd"]
+[ext_resource type="PackedScene" uid="uid://bkgwyqydxbwy2" path="res://Assets/Blender/SnowBarrier.blend" id="2_jrxr8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cib22"]
+size = Vector3(2, 1.5, 0.6)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ff8x6"]
+radius = 4.0
+height = 10.0
+
+[node name="SnowBarrier" type="CharacterBody3D" groups=["Obstacle"]]
+transform = Transform3D(1, 0, 0, 0, 0.965926, -0.258819, 0, 0.258819, 0.965926, 0, 0, 0)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_wwtxd")
+
+[node name="SnowBarrier" parent="." instance=ExtResource("2_jrxr8")]
+transform = Transform3D(4, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 5.96046e-08)
+shape = SubResource("BoxShape3D_cib22")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_ff8x6")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

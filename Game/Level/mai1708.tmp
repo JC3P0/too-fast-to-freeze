@@ -1,0 +1,93 @@
+[gd_scene load_steps=8 format=3 uid="uid://cckpfdqh4f1cj"]
+
+[ext_resource type="PackedScene" uid="uid://dtqjpg20jqtkv" path="res://Game/Player/Player.tscn" id="1_ix8k8"]
+[ext_resource type="PackedScene" uid="uid://18yehieu3brv" path="res://Game/Level/Spawner/spawner.tscn" id="2_ugmdt"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bv4as"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_3qkyn"]
+sky_material = SubResource("ProceduralSkyMaterial_bv4as")
+
+[sub_resource type="Environment" id="Environment_33n11"]
+background_mode = 2
+sky = SubResource("Sky_3qkyn")
+tonemap_mode = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_k7grm"]
+size = Vector2(40, 300)
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_4ud2c"]
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_33n11")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("PlaneMesh_k7grm")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("WorldBoundaryShape3D_4ud2c")
+
+[node name="Player" parent="." instance=ExtResource("1_ix8k8")]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 127.0
+offset_bottom = 105.0
+
+[node name="PanelContainer" type="PanelContainer" parent="Control"]
+layout_mode = 0
+offset_top = 63.0
+offset_right = 134.0
+offset_bottom = 115.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer"]
+layout_mode = 2
+
+[node name="SpeedContainer" type="HBoxContainer" parent="Control/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="SpeedLabel" type="Label" parent="Control/PanelContainer/VBoxContainer/SpeedContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Speed : 
+"
+
+[node name="SpeedCurrent" type="Label" parent="Control/PanelContainer/VBoxContainer/SpeedContainer"]
+layout_mode = 2
+text = "00
+"
+
+[node name="DistanceContainer" type="HBoxContainer" parent="Control/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DistanceLabel" type="Label" parent="Control/PanelContainer/VBoxContainer/DistanceContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Distance : 
+"
+
+[node name="DistanceCurrent" type="Label" parent="Control/PanelContainer/VBoxContainer/DistanceContainer"]
+layout_mode = 2
+text = "00
+"
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.987658, 0.156624, 0, -0.156624, 0.987658, 0, 3.7123, 4.54726)
+
+[node name="Spawner" parent="." instance=ExtResource("2_ugmdt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -137)
+script = null
+
+[editable path="Spawner"]
