@@ -7,3 +7,5 @@ Notes/
 *.aab
 *.x86_64
 *.pck
+
+.idea/
