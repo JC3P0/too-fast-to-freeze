@@ -46,12 +46,13 @@ func _physics_process(delta: float) -> void:
 	GlobalState.total_distance += distance_this_frame
 
 
-func _on_area_3d_body_entered(body: Node3D) -> void:	
+func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Obstacle"):
 		player_state_manager.set_state("Vuln")
 		$HurtTimer.start()
-		body_to_delete = body		
-		
+		body_to_delete = body
+		EventBus.player_hit.emit(body)
+
 	if body.is_in_group("Coffee"):
 		control.add_freeze_time()
 		body.queue_free()
