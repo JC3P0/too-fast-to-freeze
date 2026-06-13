@@ -17,5 +17,5 @@ func handle_input(_event):
 
 func process_state(delta):
 	#print("Stop_Turn: GlobalState.player_speed changed: ", GlobalState.player_speed)
-	player.player_state_manager.player_helper.adjust_player_speed(0.0, (player.ACC_RATE * 4), delta)
-	player.player_state_manager.player_helper.rotate_player(player.STOP_ROTATION_ANGLE, player.ROTATION_SPEED, player, delta)
+	player.player_state_manager.player_helper.adjust_player_speed(0.0, player.stats.acc_rate * 4, delta)
+	player.player_state_manager.player_helper.rotate_player(player.stats.stop_rotation_angle, player.stats.rotation_speed, player, delta)
