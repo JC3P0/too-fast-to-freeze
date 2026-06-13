@@ -28,10 +28,10 @@ func handle_input(_event):
 
 func process_state(delta):
 	#print("Hard_Turn: GlobalState.player_speed changed: ", GlobalState.player_speed)
-	player.player_state_manager.player_helper.adjust_player_speed(player.HARD_MAX_SPEED, (player.ACC_RATE), delta)
+	player.player_state_manager.player_helper.adjust_player_speed(player, player.HARD_MAX_SPEED, (player.ACC_RATE), delta)
 	player.player_state_manager.player_helper.move_player(player.HARD_TURN_SPEED, player, delta)
 	player.player_state_manager.player_helper.rotate_player(player.HARD_ROTATION_ANGLE, player.ROTATION_SPEED, player, delta)
-	player.player_state_manager.player_helper.update_particle_effects(player.hard_turn_particles, GlobalState.player_speed)
+	player.player_state_manager.player_helper.update_particle_effects(player.hard_turn_particles, player.player_speed)
 
 func _on_stop_turn_timer_timeout():
 	if player.player_state_manager.current_state_name == "Vuln":

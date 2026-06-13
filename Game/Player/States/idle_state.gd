@@ -25,6 +25,6 @@ func handle_input(_event):
 		player.player_state_manager.set_state("Soft")
 
 func process_state(delta):
-	player.player_state_manager.player_helper.adjust_player_speed(player.IDLE_MAX_SPEED, (player.ACC_RATE), delta)
+	player.player_state_manager.player_helper.adjust_player_speed(player, player.IDLE_MAX_SPEED, (player.ACC_RATE), delta)
 	player.player_state_manager.player_helper.rotate_player(0.0, player.ROTATION_SPEED, player, delta)
-	player.player_state_manager.player_helper.update_particle_effects(player.idle_particles, GlobalState.player_speed)
+	player.player_state_manager.player_helper.update_particle_effects(player.idle_particles, player.player_speed)

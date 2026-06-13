@@ -22,9 +22,11 @@ extends CharacterBody3D
 
 @onready var control: Control = $"../Control"
 
+var player_speed: float = 0.0
 var body_to_delete
 
 func _ready() -> void:
+	add_to_group("Player")
 	player_state_manager.initialize(self)
 	player_state_manager.player_helper.init_particles(self)
 	player_state_manager.set_state("Idle")
@@ -42,7 +44,7 @@ func _physics_process(delta: float) -> void:
 	#
 	# adds the distance to the current distance for total distance
 	#var distance_this_frame = round(GlobalState.player_speed * delta)
-	var distance_this_frame = (GlobalState.player_speed * delta) / 2
+	var distance_this_frame = (player_speed * delta) / 2
 	GlobalState.total_distance += distance_this_frame
 
 
