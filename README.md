@@ -12,7 +12,7 @@ The core loop: ski fast, survive obstacles, beat your distance.
 
 ## The Transformation
 
-The jam version was a vertical slice made under a deadline. The goal now is to rebuild it as a proper roguelike with:
+The jam version was a vertical slice made under a deadline. The goal now is to rebuild it as a proper roguelite — first getting the infinite runner feeling great (Phases 1–2), then layering in the roguelite systems (checkpoints, per-run upgrades, weapons, bots) starting Phase 3.
 
 - **Physics-based tracks** — real slopes you slide down using Godot's physics engine, replacing the current "obstacles move toward you" illusion
 - **Checkpoint upgrade system** — each checkpoint pauses the run and presents upgrade choices before you continue
@@ -22,7 +22,7 @@ The jam version was a vertical slice made under a deadline. The goal now is to r
 
 ---
 
-## Upgrade System (Rogue-like Loop)
+## Upgrade System (Roguelite Loop)
 
 Each checkpoint offers upgrades across three weapon/ability tracks:
 
