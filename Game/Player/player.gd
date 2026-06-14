@@ -7,18 +7,9 @@ extends CharacterBody3D
 @onready var soft_turn_particles = $soft_trail_particles
 @onready var hard_turn_particles = $hard_trail_particles
 
-@export var ACC_RATE = 0.0
-@export var IDLE_MAX_SPEED = 0.0
-@export var ROTATION_SPEED = 0.0
-@export var SOFT_ROTATION_ANGLE = 0.0
-@export var SOFT_MAX_SPEED = 0.0
-@export var SOFT_TURN_SPEED = 0.0
-@export var HARD_ROTATION_ANGLE = 0.0
-@export var HARD_MAX_SPEED = 0.0
-@export var HARD_TURN_SPEED = 0.0
-@export var STOP_ROTATION_ANGLE = 0.0
-@export var JUMP_HEIGHT = 0.0
-@export var JUMP_DURATION = 0.0
+## Flyweight resource holding all player movement stats.
+## Assign a PlayerStatsResource .tres in the Inspector.
+@export var stats: PlayerStatsResource
 
 @onready var control: Control = $"../Control"
 

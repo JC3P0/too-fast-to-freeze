@@ -28,9 +28,9 @@ func handle_input(_event):
 
 func process_state(delta):
 	#print("Soft_Turn: GlobalState.player_speed changed: ", GlobalState.player_speed)
-	player.player_state_manager.player_helper.adjust_player_speed(player.SOFT_MAX_SPEED, (player.ACC_RATE), delta)
-	player.player_state_manager.player_helper.move_player(player.SOFT_TURN_SPEED, player, delta)
-	player.player_state_manager.player_helper.rotate_player(player.SOFT_ROTATION_ANGLE, player.ROTATION_SPEED, player, delta)
+	player.player_state_manager.player_helper.adjust_player_speed(player.stats.soft_max_speed, player.stats.acc_rate, delta)
+	player.player_state_manager.player_helper.move_player(player.stats.soft_turn_speed, player, delta)
+	player.player_state_manager.player_helper.rotate_player(player.stats.soft_rotation_angle, player.stats.rotation_speed, player, delta)
 	player.player_state_manager.player_helper.update_particle_effects(player.soft_turn_particles, GlobalState.player_speed)
 
 func _on_hard_turn_timer_timeout():
