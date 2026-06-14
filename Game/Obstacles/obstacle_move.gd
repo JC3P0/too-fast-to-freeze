@@ -1,9 +1,13 @@
 extends CharacterBody3D
 
-func _physics_process(delta: float) -> void:
+var player
 
+func _ready() -> void:
+	player = get_tree().get_first_node_in_group("Player")
+
+func _physics_process(delta: float) -> void:
 	var direction := Vector3(0,0,1)
-	velocity.z = direction.z * GlobalState.player_speed	
+	velocity.z = direction.z * player.player_speed
 
 	move_and_slide()
 

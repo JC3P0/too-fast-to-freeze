@@ -22,7 +22,7 @@ func handle_input(event):
 		player.turn_direction = -1
 
 func process_state(delta):
-	player.player_state_manager.player_helper.adjust_player_speed(GlobalState.player_speed + 1, (2), delta)
+	player.player_state_manager.player_helper.adjust_player_speed(player, player.player_speed + 1, (2), delta)
 	player.player_state_manager.player_helper.move_player(3, player, delta)
 	player.player_state_manager.player_helper.rotate_player((17.5), (2.5), player, delta)
 

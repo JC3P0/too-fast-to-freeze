@@ -11,6 +11,6 @@ func show_game_over():
 
 func _on_restart_pressed() -> void:
 	visible = false
-	GlobalState.player_speed = 0
+	get_tree().get_first_node_in_group("Player").player_speed = 0
 	GlobalState.total_distance = 0
 	level_loader.restart_level()
