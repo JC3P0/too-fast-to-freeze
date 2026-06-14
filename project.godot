@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GlobalState="*res://Game/Level/GlobalState.gd"
+GameStateManager="*res://Game/Core/game_state_manager.gd"
 EventBus="*res://Game/Core/EventBus.gd"
 
 [input]
