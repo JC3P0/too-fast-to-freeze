@@ -1,8 +1,6 @@
 extends Node
 
 var player
-var jump_height = 2.0
-var jump_duration = 1.0
 var current_jump_time = 0.0
 
 func set_player(player_instance):
@@ -29,9 +27,9 @@ func process_state(delta):
 	player.player_state_manager.player_helper.rotate_player((17.5), (2.5), player, delta)
 
 
-	if current_jump_time < jump_duration:
-		var jump_progress = current_jump_time / jump_duration
-		var vertical_offset = sin(jump_progress * PI) * jump_height
+	if current_jump_time < player.stats.jump_duration:
+		var jump_progress = current_jump_time / player.stats.jump_duration
+		var vertical_offset = sin(jump_progress * PI) * player.stats.jump_height
 		player.position.y = vertical_offset
 		current_jump_time += delta
 	else:

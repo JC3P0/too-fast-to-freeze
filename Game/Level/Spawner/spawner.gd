@@ -4,119 +4,78 @@ extends Node3D
 @onready var marker_b: Marker3D = $MarkerB
 @onready var obstacle_holder: Node3D = $ObstacleHolder
 
-var spawn_distance_interval = 1.0
-var last_spawn_distance = 0.0
+var spawn_distance_interval := 1.0
+var last_spawn_distance := 0.0
 
-const TREE_S = preload("res://Game/Obstacles/Tree/tree_s.tscn")
-const TREE_M = preload("res://Game/Obstacles/Tree/tree_m.tscn")
-const TREE_L = preload("res://Game/Obstacles/Tree/tree_l.tscn")
+var _factory := ObstacleFactory.new()
 
-const SNOW_POOF_S = preload("res://Game/Obstacles/SnowPoofs/snow_poof_s.tscn")
-const SNOW_POOF_M = preload("res://Game/Obstacles/SnowPoofs/snow_poof_m.tscn")
-const SNOW_POOF_L = preload("res://Game/Obstacles/SnowPoofs/snow_poof_l.tscn")
-const SNOW_BARRIER = preload("res://Game/Obstacles/SnowBarrier/snow_barrier.tscn")
 
-const COFFEE = preload("res://Game/Obstacles/coffee.tscn")
-const BOULDER = preload("res://Game/Obstacles/boulder.tscn")
+func _ready() -> void:
+	add_child(_factory)
 
-func _physics_process(delta: float) -> void:
-	
+
+func _physics_process(_delta: float) -> void:
 	check_spawn_obstacle()
-	
-	
-func check_spawn_obstacle():	
-	var distance_traveled = GlobalState.total_distance
-	#print(distance_traveled)
+
+
+func check_spawn_obstacle() -> void:
+	var distance_traveled: float = GlobalState.total_distance
 	if distance_traveled - last_spawn_distance >= spawn_distance_interval:
 		spawn_obstacle()
 		last_spawn_distance = distance_traveled
 		randomize()
-		spawn_distance_interval = randi_range(2,6)
+		spawn_distance_interval = randi_range(2, 6)
 
-func spawn_obstacle():
-	
+
+func spawn_obstacle() -> void:
 	randomize()
-	var number_of_trees = randi_range(3,11)
-	var number_of_snowpoofs = randi_range(1,3)
-	var number_of_snow_barrier = randi_range(1,100)
-	var number_of_boulders = randi_range(1,100)
-	var number_of_coffees = randi_range(1,100)
-	
-	for i in number_of_trees:		
-		# get a random spawn point between Marker A and Marker B
-		randomize()
-		var spawn_point = randf_range(marker_a.global_position.x,marker_b.global_position.x)
-		
-		var type_of_tree = randi_range(1,3)	
-		if type_of_tree == 1:				
-			var new_tree = TREE_S.instantiate()
-			obstacle_holder.add_child(new_tree)
-			new_tree.global_position.x = spawn_point
-			
-		if type_of_tree == 2:				
-			var new_tree = TREE_M.instantiate()
-			obstacle_holder.add_child(new_tree)
-			new_tree.global_position.x = spawn_point
-			
-		if type_of_tree == 3:				
-			var new_tree = TREE_L.instantiate()
-			obstacle_holder.add_child(new_tree)
-			new_tree.global_position.x = spawn_point
-			
-		
-	
-	for i in number_of_snowpoofs:
-		# get a random spawn point between Marker A and Marker B
-		randomize()
-		var spawn_point = randf_range(marker_a.global_position.x,marker_b.global_position.x)
-		
-		# choosese the type of snowpoof to spawn
-		var type_of_snowpoof = randi_range(1,3)	
-		if type_of_snowpoof == 1:				
-			var new_poof = SNOW_POOF_S.instantiate()
-			obstacle_holder.add_child(new_poof)
-			new_poof.global_position.x = spawn_point
-			
-		if type_of_snowpoof == 2:				
-			var new_poof = SNOW_POOF_M.instantiate()
-			obstacle_holder.add_child(new_poof)
-			new_poof.global_position.x = spawn_point
-			
-		if type_of_snowpoof == 3:				
-			var new_poof = SNOW_POOF_L.instantiate()
-			obstacle_holder.add_child(new_poof)
-			new_poof.global_position.x = spawn_point
-			
-			
-	if number_of_snow_barrier <= 30:		
-		# get a random spawn point between Marker A and Marker B
-		randomize()
-		var spawn_point = randf_range(marker_a.global_position.x,marker_b.global_position.x)
-		
-		var new_barrier = SNOW_BARRIER.instantiate()
-		obstacle_holder.add_child(new_barrier)
-		new_barrier.global_position.x = spawn_point
-		
+	var number_of_trees       := randi_range(3, 11)
+	var number_of_snowpoofs   := randi_range(1, 3)
+	var number_of_snow_barrier := randi_range(1, 100)
+	var number_of_boulders    := randi_range(1, 100)
+	var number_of_coffees     := randi_range(1, 100)
 
-	if number_of_boulders <= 30:		
-		# get a random spawn point between Marker A and Marker B
+	var tree_types: Array[ObstacleFactory.ObstacleType] = [
+		ObstacleFactory.ObstacleType.TREE_S,
+		ObstacleFactory.ObstacleType.TREE_M,
+		ObstacleFactory.ObstacleType.TREE_L,
+	]
+	for i in number_of_trees:
 		randomize()
-		var spawn_point = randf_range(marker_a.global_position.x,marker_b.global_position.x)
-		
-		var new_boulder = BOULDER.instantiate()
-		obstacle_holder.add_child(new_boulder)
-		new_boulder.global_position.x = spawn_point
-		
-		
-	if number_of_coffees <= 30:		
-		# get a random spawn point between Marker A and Marker B
+		_spawn(tree_types.pick_random(), _rand_x())
+
+	var poof_types: Array[ObstacleFactory.ObstacleType] = [
+		ObstacleFactory.ObstacleType.SNOW_POOF_S,
+		ObstacleFactory.ObstacleType.SNOW_POOF_M,
+		ObstacleFactory.ObstacleType.SNOW_POOF_L,
+	]
+	for i in number_of_snowpoofs:
 		randomize()
-		var spawn_point = randf_range(marker_a.global_position.x,marker_b.global_position.x)
-		
-		var new_coffee = COFFEE.instantiate()
-		obstacle_holder.add_child(new_coffee)
-		new_coffee.global_position.x = spawn_point
-		
+		_spawn(poof_types.pick_random(), _rand_x())
+
+	if number_of_snow_barrier <= 30:
+		randomize()
+		_spawn(ObstacleFactory.ObstacleType.SNOW_BARRIER, _rand_x())
+
+	if number_of_boulders <= 30:
+		randomize()
+		_spawn(ObstacleFactory.ObstacleType.BOULDER, _rand_x())
+
+	if number_of_coffees <= 30:
+		randomize()
+		_spawn(ObstacleFactory.ObstacleType.COFFEE, _rand_x())
+
+
+## Returns a random x position within the spawn lane defined by MarkerA and MarkerB.
+func _rand_x() -> float:
+	return randf_range(marker_a.global_position.x, marker_b.global_position.x)
+
+
+## Instantiates an obstacle via the factory and adds it to the obstacle holder.
+func _spawn(type: ObstacleFactory.ObstacleType, x: float) -> void:
+	var obs: Node3D = _factory.create(type, Vector3(x, 0.0, 0.0))
+	obstacle_holder.add_child(obs)
+
 
 func _on_despawner_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Obstacle"):
@@ -125,4 +84,3 @@ func _on_despawner_body_entered(body: Node3D) -> void:
 		body.queue_free()
 	if body.is_in_group("SnowPuff"):
 		body.queue_free()
-	

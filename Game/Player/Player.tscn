@@ -1,6 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://dtqjpg20jqtkv"]
+[gd_scene format=3 uid="uid://dtqjpg20jqtkv"]
 
 [ext_resource type="Script" uid="uid://cbflemreqti4r" path="res://Game/Player/player.gd" id="1_ih0iw"]
+[ext_resource type="Resource" uid="uid://2lyxmijs8ayx" path="res://Game/Data/player_stats.tres" id="2_6upfr"]
 [ext_resource type="PackedScene" uid="uid://bntvw807yp6np" path="res://Assets/Blender/Player4.blend" id="2_gb67c"]
 [ext_resource type="Script" uid="uid://crkuxkl0j5okf" path="res://Game/Player/States/player_state_manager.gd" id="3_852li"]
 [ext_resource type="PackedScene" uid="uid://ctvfpofgfhexe" path="res://Game/Player/Trails/hard_trail_particles.tscn" id="3_j3gwb"]
@@ -18,26 +19,15 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1w2v0"]
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" unique_id=1863745662]
 script = ExtResource("1_ih0iw")
-ACC_RATE = 5.0
-IDLE_MAX_SPEED = 35.0
-ROTATION_SPEED = 5.0
-SOFT_ROTATION_ANGLE = 35.0
-SOFT_MAX_SPEED = 15.0
-SOFT_TURN_SPEED = 10.0
-HARD_ROTATION_ANGLE = 45.0
-HARD_MAX_SPEED = 5.0
-HARD_TURN_SPEED = 15.0
-STOP_ROTATION_ANGLE = 90.0
-JUMP_HEIGHT = 2.0
-JUMP_DURATION = 1.0
+stats = ExtResource("2_6upfr")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1172323215]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.186668, 1, 0)
 shape = SubResource("CapsuleShape3D_54qhv")
 
-[node name="Player4" parent="." instance=ExtResource("2_gb67c")]
+[node name="Player4" parent="." unique_id=1084285411 instance=ExtResource("2_gb67c")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Skeleton3D" parent="Player4/Armature" index="0"]
@@ -59,45 +49,45 @@ bones/13/scale = Vector3(1, 1, 1)
 bones/14/rotation = Quaternion(-0.033531, 0.743686, -0.0393936, 0.666524)
 bones/15/rotation = Quaternion(4.65661e-10, 5.88903e-17, 7.33417e-09, 1)
 
-[node name="hard_trail_particles" parent="." instance=ExtResource("3_j3gwb")]
+[node name="hard_trail_particles" parent="." unique_id=210944192 instance=ExtResource("3_j3gwb")]
 
-[node name="snow_trail_idle" parent="." instance=ExtResource("4_ssr2j")]
+[node name="snow_trail_idle" parent="." unique_id=484289561 instance=ExtResource("4_ssr2j")]
 
-[node name="soft_trail_particles" parent="." instance=ExtResource("5_ej26e")]
+[node name="soft_trail_particles" parent="." unique_id=1384117169 instance=ExtResource("5_ej26e")]
 
-[node name="Player_state_manager" type="Node" parent="."]
+[node name="Player_state_manager" type="Node" parent="." unique_id=1576056380]
 script = ExtResource("3_852li")
 
-[node name="PlayerHelper" type="Node" parent="Player_state_manager"]
+[node name="PlayerHelper" type="Node" parent="Player_state_manager" unique_id=1131724232]
 script = ExtResource("3_r87qv")
 
-[node name="idle_state" type="Node" parent="Player_state_manager"]
+[node name="idle_state" type="Node" parent="Player_state_manager" unique_id=2025839866]
 script = ExtResource("5_36an1")
 
-[node name="soft_turn" type="Node" parent="Player_state_manager"]
+[node name="soft_turn" type="Node" parent="Player_state_manager" unique_id=7563530]
 script = ExtResource("6_xtbkq")
 
-[node name="hard_turn" type="Node" parent="Player_state_manager"]
+[node name="hard_turn" type="Node" parent="Player_state_manager" unique_id=1143172384]
 script = ExtResource("7_ej8a5")
 
-[node name="stop_turn" type="Node" parent="Player_state_manager"]
+[node name="stop_turn" type="Node" parent="Player_state_manager" unique_id=352548462]
 script = ExtResource("8_ejxtu")
 
-[node name="jump" type="Node" parent="Player_state_manager"]
+[node name="jump" type="Node" parent="Player_state_manager" unique_id=826909198]
 script = ExtResource("9_ubqs3")
 
-[node name="vulnerable" type="Node" parent="Player_state_manager"]
+[node name="vulnerable" type="Node" parent="Player_state_manager" unique_id=1010628229]
 script = ExtResource("13_25frb")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="Area3D" type="Area3D" parent="." unique_id=1247224070]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2090515796]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08927, -0.197857)
 shape = SubResource("CapsuleShape3D_1w2v0")
 
-[node name="HurtTimer" type="Timer" parent="."]
+[node name="HurtTimer" type="Timer" parent="." unique_id=628241402]
 wait_time = 1.5
 one_shot = true
 
