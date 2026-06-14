@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="GodotWildJam76"
+config/name="too-fast-to-freeze"
 run/main_scene="res://Game/Level/SceneManager.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
@@ -22,6 +22,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 GlobalState="*res://Game/Level/GlobalState.gd"
+GameStateManager="*res://Game/Core/game_state_manager.gd"
+EventBus="*res://Game/Core/EventBus.gd"
 
 [input]
 

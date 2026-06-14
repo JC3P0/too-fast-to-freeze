@@ -13,7 +13,7 @@ func set_player(player_instance):
 func enter_state():
 	player.animation_player.play("Hurt")
 	print("entered: vulnerable state")
-	GlobalState.player_speed = 0
+	player.player_speed = 0
 	#player.turn_direction = player.player_state_manager.player_helper.determine_turn_direction(player.turn_direction)
 	vuln_timer.start()
 
