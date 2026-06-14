@@ -7,24 +7,17 @@ extends CharacterBody3D
 @onready var soft_turn_particles = $soft_trail_particles
 @onready var hard_turn_particles = $hard_trail_particles
 
-@export var ACC_RATE = 0.0
-@export var IDLE_MAX_SPEED = 0.0
-@export var ROTATION_SPEED = 0.0
-@export var SOFT_ROTATION_ANGLE = 0.0
-@export var SOFT_MAX_SPEED = 0.0
-@export var SOFT_TURN_SPEED = 0.0
-@export var HARD_ROTATION_ANGLE = 0.0
-@export var HARD_MAX_SPEED = 0.0
-@export var HARD_TURN_SPEED = 0.0
-@export var STOP_ROTATION_ANGLE = 0.0
-@export var JUMP_HEIGHT = 0.0
-@export var JUMP_DURATION = 0.0
+## Flyweight resource holding all player movement stats.
+## Assign a PlayerStatsResource .tres in the Inspector.
+@export var stats: PlayerStatsResource
 
 @onready var control: Control = $"../Control"
 
+var player_speed: float = 0.0
 var body_to_delete
 
 func _ready() -> void:
+	add_to_group("Player")
 	player_state_manager.initialize(self)
 	player_state_manager.player_helper.init_particles(self)
 	player_state_manager.set_state("Idle")
@@ -42,16 +35,17 @@ func _physics_process(delta: float) -> void:
 	#
 	# adds the distance to the current distance for total distance
 	#var distance_this_frame = round(GlobalState.player_speed * delta)
-	var distance_this_frame = (GlobalState.player_speed * delta) / 2
+	var distance_this_frame = (player_speed * delta) / 2
 	GlobalState.total_distance += distance_this_frame
 
 
-func _on_area_3d_body_entered(body: Node3D) -> void:	
+func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Obstacle"):
 		player_state_manager.set_state("Vuln")
 		$HurtTimer.start()
-		body_to_delete = body		
-		
+		body_to_delete = body
+		EventBus.player_hit.emit(body)
+
 	if body.is_in_group("Coffee"):
 		control.add_freeze_time()
 		body.queue_free()
