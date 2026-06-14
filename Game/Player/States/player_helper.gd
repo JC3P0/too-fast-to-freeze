@@ -31,11 +31,12 @@ func handle_turn_input(player):
 	
 	return false
 
-func adjust_player_speed(player, target_speed: float, ACC_RATE, delta: float):
+func adjust_player_speed(target_speed: float, acc_rate: float, delta: float) -> void:
+	var player = get_parent().player
 	if player.player_speed < target_speed:
-		player.player_speed += ACC_RATE * delta
+		player.player_speed += acc_rate * delta
 	elif player.player_speed > target_speed + 1:
-		player.player_speed -= ACC_RATE * delta
+		player.player_speed -= acc_rate * delta
 	elif target_speed == 0:
 		player.player_speed = 0
 
