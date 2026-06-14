@@ -80,7 +80,7 @@ too-fast-to-freeze/
 
 Track progress via [GitHub Issues](../../issues).
 
-- [ ] **Phase 1** — Architecture refactor (EventBus, Factory, clean GlobalState)
+- [x] **Phase 1** — Architecture refactor (EventBus, Factory, clean GlobalState)
 - [ ] **Phase 2** — Physics tracks + proper camera follow
 - [ ] **Phase 3** — Checkpoint + upgrade system
 - [ ] **Phase 4** — Axe ability + Saw blade weapon
