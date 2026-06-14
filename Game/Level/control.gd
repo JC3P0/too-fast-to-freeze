@@ -6,7 +6,7 @@ extends Control
 @onready var freeze_progress_bar = $FreezeProgressBar
 @onready var percentage_of_time
 @onready var game_over_scene = $"../../../GameOverScreen"
-@onready var player = get_node("../Player")
+var player: Node = null
 
 var coffee_time = 5.0
 
@@ -14,6 +14,10 @@ func _ready() -> void:
 	freeze_timer.connect("timeout", Callable(self, "_on_stop_freeze_timer_timeout"))
 
 func _process(delta: float) -> void:
+	if not player:
+		player = get_tree().get_first_node_in_group("Player")
+	if not player:
+		return
 	speed_label.text = str(int(player.player_speed))
 	distance_label.text = str(int(GlobalState.total_distance))
 	if freeze_timer.get_time_left() > 0:
