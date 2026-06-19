@@ -16,6 +16,10 @@ enum InputMode { STATE_MACHINE, DIRECTIONAL }
 ## Assign a PlayerStatsResource .tres in the Inspector.
 @export var stats: PlayerStatsResource
 
+## Settings for the DirectionalStrategy control system.
+## Assign directional_stats.tres in the Inspector.
+@export var directional_stats: DirectionalStrategyResource
+
 ## Dynamic FOV — camera field of view lerps between min and max as speed rises.
 ## fov_ref_speed is the speed at which FOV reaches max (match DirectionalStrategy.max_speed).
 @export var min_fov: float = 75.0
@@ -23,7 +27,6 @@ enum InputMode { STATE_MACHINE, DIRECTIONAL }
 @export var fov_ref_speed: float = 20.0
 
 @onready var control: Control = $"../Control"
-@onready var _camera: Camera3D = $Camera3D
 
 var player_speed: float = 0.0
 ## Unified movement state — set each frame by the active InputStrategy.
@@ -35,6 +38,7 @@ var player_current_speed: float = 0.0
 
 var body_to_delete
 var _input_strategy: InputStrategy
+var _camera: Camera3D = null
 
 func _ready() -> void:
 	add_to_group("Player")
@@ -47,11 +51,14 @@ func _setup_input_strategy() -> void:
 	match input_mode:
 		InputMode.STATE_MACHINE:
 			_input_strategy = StateMachineStrategy.new()
+			add_child(_input_strategy)
 			player_state_manager.set_physics_process(true)
 		InputMode.DIRECTIONAL:
-			_input_strategy = DirectionalStrategy.new()
+			var ds := DirectionalStrategy.new()
+			ds.settings = directional_stats
+			_input_strategy = ds
+			add_child(_input_strategy)
 			player_state_manager.set_physics_process(false)
-	add_child(_input_strategy)
 
 func _input(event: InputEvent) -> void:
 	_input_strategy.handle_input_event(self, event)
@@ -62,6 +69,8 @@ func _physics_process(delta: float) -> void:
 	_input_strategy.process_input(self, delta)
 	var distance_this_frame = (player_speed * delta) / 2
 	GlobalState.total_distance += distance_this_frame
+	if _camera == null:
+		_camera = get_node_or_null("../Camera3D")
 	if _camera and fov_ref_speed > 0.0:
 		_camera.fov = lerp(min_fov, max_fov, player_current_speed / fov_ref_speed)
 

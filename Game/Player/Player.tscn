@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://bntvw807yp6np" path="res://Assets/Blender/Player4.blend" id="2_gb67c"]
 [ext_resource type="Script" uid="uid://crkuxkl0j5okf" path="res://Game/Player/States/player_state_manager.gd" id="3_852li"]
 [ext_resource type="PackedScene" uid="uid://ctvfpofgfhexe" path="res://Game/Player/Trails/hard_trail_particles.tscn" id="3_j3gwb"]
+[ext_resource type="Resource" uid="uid://c85gc3jdj7i4e" path="res://Game/Data/directional_stats.tres" id="3_px0gh"]
 [ext_resource type="Script" uid="uid://bf37tspueqq3e" path="res://Game/Player/States/player_helper.gd" id="3_r87qv"]
 [ext_resource type="PackedScene" uid="uid://b67nptry8ud3w" path="res://Game/Player/Trails/snow_trail_idle.tscn" id="4_ssr2j"]
 [ext_resource type="Script" uid="uid://d4ijrcwtesf68" path="res://Game/Player/States/idle_state.gd" id="5_36an1"]
@@ -21,7 +22,9 @@
 
 [node name="Player" type="CharacterBody3D" unique_id=1863745662]
 script = ExtResource("1_ih0iw")
+input_mode = 1
 stats = ExtResource("2_6upfr")
+directional_stats = ExtResource("3_px0gh")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1172323215]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.186668, 1, 0)
