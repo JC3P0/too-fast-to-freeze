@@ -18,7 +18,7 @@ func _process(delta: float) -> void:
 		player = get_tree().get_first_node_in_group("Player")
 	if not player:
 		return
-	speed_label.text = str(int(player.player_speed))
+	speed_label.text = str(int(player.player_current_speed))
 	distance_label.text = str(int(GlobalState.total_distance))
 	if freeze_timer.get_time_left() > 0:
 		freeze_progress_bar.value = 60 - freeze_timer.time_left
