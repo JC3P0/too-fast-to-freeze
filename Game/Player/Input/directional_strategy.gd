@@ -5,6 +5,7 @@ extends InputStrategy
 ## States: IDLE (no input) → TURNING (drag held) → RELEASED (drag released, pump window).
 ## Sets player.player_direction (Vector3) and player.player_current_speed each frame.
 ## obstacle_move.gd reads both X and Z from player.player_direction.
+## Dynamic FOV is handled centrally in player.gd.
 
 # --- Tunable exports ---
 @export var max_speed: float = 20.0
@@ -14,8 +15,6 @@ extends InputStrategy
 @export var max_turn_angle: float = 60.0       ## Max yaw offset from straight ahead (degrees)
 @export var pump_boost: float = 2.0            ## Speed added on a successful pump
 @export var pump_speed_cap: float = 1.1        ## Pump can push speed up to this × max_speed
-@export var min_fov: float = 75.0
-@export var max_fov: float = 88.0
 
 # --- State machine ---
 enum State { IDLE, TURNING, RELEASED }
@@ -37,12 +36,8 @@ const _DEFAULT_DIRECTION := Vector3(0, 0, 1)
 var _previous_direction: Vector3 = Vector3(0, 0, 1)
 var _pump_fired: bool = false
 
-# --- Camera (lazy-init on first process_input call) ---
-var _camera: Camera3D = null
-
 
 func _ready() -> void:
-	# get_viewport() is safe here — node is in the tree by the time _ready fires
 	_max_drag_distance = get_viewport().get_visible_rect().size.x / 5.0
 
 
@@ -61,10 +56,6 @@ func handle_input_event(_player: CharacterBody3D, event: InputEvent) -> void:
 
 # Called from player.gd _physics_process() each frame
 func process_input(player: CharacterBody3D, delta: float) -> void:
-	# Lazy-init camera — look for Camera3D as a direct child of the player node
-	if _camera == null:
-		_camera = player.get_node_or_null("Camera3D")
-
 	match _state:
 		State.IDLE:
 			_target_direction = _DEFAULT_DIRECTION
@@ -93,7 +84,6 @@ func process_input(player: CharacterBody3D, delta: float) -> void:
 			_ramp_speed(delta)
 
 			# Pump: fires once when current_direction.x crosses zero on return to center.
-			# Crossing detected by sign change between the previous and current frame.
 			if not _pump_fired:
 				var prev_sign := sign(_previous_direction.x)
 				var curr_sign := sign(_current_direction.x)
@@ -108,7 +98,7 @@ func process_input(player: CharacterBody3D, delta: float) -> void:
 			if _current_direction.is_equal_approx(_DEFAULT_DIRECTION):
 				_state = State.IDLE
 
-			# New drag → jump straight into TURNING; pump flag cleared on next RELEASED entry
+			# New drag → jump straight into TURNING
 			if _is_dragging:
 				_state = State.TURNING
 
@@ -118,15 +108,11 @@ func process_input(player: CharacterBody3D, delta: float) -> void:
 		_target_direction.normalized(), turn_acceleration
 	)
 
-	# Write unified movement state to player — obstacle_move.gd reads from here
+	# Write unified movement state to player — obstacle_move.gd and player.gd read from here
 	player.player_direction = _current_direction
 	player.player_current_speed = _current_speed
 	# Mirror into player_speed so player.gd total_distance calc stays accurate
 	player.player_speed = _current_speed
-
-	# Dynamic FOV
-	if _camera != null and max_speed > 0.0:
-		_camera.fov = lerp(min_fov, max_fov, _current_speed / max_speed)
 
 
 func get_strategy_name() -> String:
