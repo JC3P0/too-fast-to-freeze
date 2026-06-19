@@ -12,11 +12,11 @@ The core loop: ski fast, survive obstacles, beat your distance.
 
 ## The Transformation
 
-The jam version was a vertical slice made under a deadline. The goal now is to rebuild it as a proper roguelite — first getting the infinite runner feeling great (Phases 1–2), then layering in the roguelite systems (checkpoints, per-run upgrades, weapons, bots) starting Phase 3.
+The jam version was a vertical slice made under a deadline. The goal now is to rebuild it as a proper roguelite — first getting the runner feeling great (better controls, visual polish), then layering in the roguelite systems (checkpoints, upgrades, weapons) and eventually full physics and bots.
 
-- **Physics-based tracks** — real slopes you slide down using Godot's physics engine, replacing the current "obstacles move toward you" illusion
+- **Dual control systems** — new drag/angle directional controls alongside the existing turn states, switchable via the Strategy pattern. Includes a pump mechanic: release a carve at the right moment for a speed burst.
+- **Slope illusion** — a curved floor mesh plus obstacles that rise on Y creates the visual feel of skiing downhill without overhauling the core movement system
 - **Checkpoint upgrade system** — each checkpoint pauses the run and presents upgrade choices before you continue
-- **Procedural level generation** — reworked spawner tied to a proper level system with increasing difficulty
 - **Snow trail shader** — a GLSL/Godot shader that deforms a snow mesh as you move, leaving visible tracks
 - **Bot opponents** — AI skiers that race alongside you and try to bump you into trees, navigating via A\*
 
@@ -39,7 +39,8 @@ Each checkpoint offers upgrades across three weapon/ability tracks:
 | System | Pattern | Why |
 |---|---|---|
 | Game events (hit, checkpoint, upgrade) | **Observer / EventBus** | Decouples spawner, UI, audio, bots from each other |
-| Player movement | **State Machine** (existing, extended) | Already in place; will be extended for new states (Axe Swing, Airborne, Stunned) |
+| Player movement | **State Machine** (existing, extended) | Already in place; extended for new states (Axe Swing, Airborne, Stunned) |
+| Input controls | **Strategy** (`StateMachineStrategy` / `DirectionalStrategy`) | Two control systems coexist; swap via editor toggle |
 | Weapon/ability behavior | **Strategy** | Axe and saw blade share an `IWeapon` interface; behavior is swappable at runtime |
 | Obstacle/bot creation | **Factory** | `ObstacleFactory` and `BotFactory` centralize instantiation and make spawner logic clean |
 | Upgrade data | **Flyweight / Data Resource** | Godot `Resource` objects hold upgrade stats; shared across instances |
@@ -80,12 +81,13 @@ too-fast-to-freeze/
 
 Track progress via [GitHub Issues](../../issues).
 
-- [x] **Phase 1** — Architecture refactor (EventBus, Factory, clean GlobalState)
-- [ ] **Phase 2** — Physics tracks + proper camera follow
-- [ ] **Phase 3** — Checkpoint + upgrade system
-- [ ] **Phase 4** — Axe ability + Saw blade weapon
-- [ ] **Phase 5** — Snow trail shader
-- [ ] **Phase 6** — Bot opponents (A\* navigation)
-- [ ] **Phase 7** — Polish, audio, VFX, itch.io release
+- [x] **Phase 1** — Architecture refactor (EventBus, Factory, ObjectPool, PlayerStatsResource, GameStateManager)
+- [ ] **Phase 2** — Controls + Pump (Strategy pattern — directional drag system + pump mechanic)
+- [ ] **Phase 3** — Checkpoint + upgrade system (roguelite loop)
+- [ ] **Phase 4** — Slope illusion (curved floor mesh + Y-rise obstacle movement)
+- [ ] **Phase 5** — Axe ability + Saw blade weapon (WeaponStrategy)
+- [ ] **Phase 6** — Snow trail shader
+- [ ] **Phase 7** — Bot opponents + full physics (A\* navigation)
+- [ ] **Phase 8** — Polish, audio, VFX, itch.io release
 
 ---
