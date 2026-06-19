@@ -16,7 +16,14 @@ enum InputMode { STATE_MACHINE, DIRECTIONAL }
 ## Assign a PlayerStatsResource .tres in the Inspector.
 @export var stats: PlayerStatsResource
 
+## Dynamic FOV — camera field of view lerps between min and max as speed rises.
+## fov_ref_speed is the speed at which FOV reaches max (match DirectionalStrategy.max_speed).
+@export var min_fov: float = 75.0
+@export var max_fov: float = 88.0
+@export var fov_ref_speed: float = 20.0
+
 @onready var control: Control = $"../Control"
+@onready var _camera: Camera3D = $Camera3D
 
 var player_speed: float = 0.0
 ## Unified movement state — set each frame by the active InputStrategy.
@@ -55,6 +62,8 @@ func _physics_process(delta: float) -> void:
 	_input_strategy.process_input(self, delta)
 	var distance_this_frame = (player_speed * delta) / 2
 	GlobalState.total_distance += distance_this_frame
+	if _camera and fov_ref_speed > 0.0:
+		_camera.fov = lerp(min_fov, max_fov, player_current_speed / fov_ref_speed)
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Obstacle"):
