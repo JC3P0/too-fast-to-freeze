@@ -83,11 +83,10 @@ Track progress via [GitHub Issues](../../issues).
 
 - [x] **Phase 1** — Architecture refactor (EventBus, Factory, ObjectPool, PlayerStatsResource, GameStateManager)
 - [ ] **Phase 2** — Controls + Pump (Strategy pattern — directional drag system + pump mechanic)
-- [ ] **Phase 3** — Checkpoint + upgrade system (roguelite loop)
-- [ ] **Phase 4** — Slope illusion (curved floor mesh + Y-rise obstacle movement)
-- [ ] **Phase 5** — Axe ability + Saw blade weapon (WeaponStrategy)
-- [ ] **Phase 6** — Snow trail shader
-- [ ] **Phase 7** — Bot opponents + full physics (A\* navigation)
-- [ ] **Phase 8** — Polish, audio, VFX, itch.io release
+- [ ] **Phase 3** — Slope illusion (curved floor mesh + Y-rise obstacle movement)
+- [ ] **Phase 4** — Abilities & Items (axe, saw blade, ramp items — jump state may be replaced by ramps)
+- [ ] **Phase 5** — Checkpoints + upgrade system (roguelite loop)
+- [ ] **Phase 6** — Bot opponents (A\* lane navigation)
+- [ ] **Phase 7** — Polish, shader, audio, VFX, itch.io release
 
 ---
