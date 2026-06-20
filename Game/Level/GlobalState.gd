@@ -1,3 +1,3 @@
 extends Node
 
-var total_distance = 0
+var total_distance: float = 0.0
