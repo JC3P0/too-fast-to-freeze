@@ -65,19 +65,21 @@ func _setup_input_strategy() -> void:
 func _input(event: InputEvent) -> void:
 	_input_strategy.handle_input_event(self, event)
 	if event.is_action_pressed("fire_saw"):
-		_fire_saw()
+		fire_saw()
 
-func _fire_saw() -> void:
+## Public so the HUD button can also trigger it.
+func fire_saw() -> void:
 	if stats.saw_count <= 0:
 		return
 	stats.saw_count -= 1
 	EventBus.saw_fired.emit(stats.saw_count)
 	var blade = _SAW_BLADE_SCENE.instantiate()
+	# Add to scene tree first so global_position is valid
+	get_parent().add_child(blade)
 	# Spawn slightly ahead of the player at the same height
 	blade.global_position = global_position + Vector3(0.0, 0.0, -3.0)
 	# Pass the player's current lateral direction for the arc
 	blade.setup(player_direction.x)
-	get_parent().add_child(blade)
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():

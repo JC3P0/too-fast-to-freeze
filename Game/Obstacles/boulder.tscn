@@ -5,7 +5,7 @@
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_2ob1l"]
 
-[node name="Boulder" type="CharacterBody3D" groups=["Obstacle"]]
+[node name="Boulder" type="CharacterBody3D" groups=["Obstacle", "Boulder"]]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_8xmpf")
