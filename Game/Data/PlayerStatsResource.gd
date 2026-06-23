@@ -51,3 +51,10 @@ const MAX_AXE_COUNT: int = 3
 ## Current axe charges. Auto-activates on the next tree collision when > 0.
 ## Reset to 0 at run start; incremented by axe pickups (capped at MAX_AXE_COUNT).
 @export var axe_count: int = 0
+
+## Maximum number of saw blade charges the player can carry at once.
+const MAX_SAW_COUNT: int = 1
+
+## Current saw blade charges. Fired manually via the fire_saw input action.
+## Reset to 0 at run start; incremented by saw pickup (capped at MAX_SAW_COUNT).
+@export var saw_count: int = 0

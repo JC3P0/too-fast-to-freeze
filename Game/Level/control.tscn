@@ -59,6 +59,17 @@ text = "Axe count : "
 layout_mode = 2
 text = "0"
 
+[node name="SawContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1080177086]
+layout_mode = 2
+
+[node name="SawLabel" type="Label" parent="PanelContainer/VBoxContainer/SawContainer" unique_id=930593314]
+layout_mode = 2
+text = "Saw Count : "
+
+[node name="SawCount" type="Label" parent="PanelContainer/VBoxContainer/SawContainer" unique_id=872645844]
+layout_mode = 2
+text = "0"
+
 [node name="FreezeProgressBar" type="TextureProgressBar" parent="." unique_id=181495790]
 custom_minimum_size = Vector2(448, 48)
 layout_mode = 0
@@ -75,3 +86,11 @@ texture_progress = ExtResource("3_pcigf")
 wait_time = 60.0
 one_shot = true
 autostart = true
+
+[node name="ButtonSawBlade" type="Button" parent="." unique_id=453670655]
+layout_mode = 0
+offset_left = 526.0
+offset_top = 593.0
+offset_right = 624.0
+offset_bottom = 639.0
+text = "SawBlade"
