@@ -40,6 +40,8 @@ var body_to_delete
 var _input_strategy: InputStrategy
 var _camera: Camera3D = null
 
+const _SAW_BLADE_SCENE := preload("res://Game/Obstacles/SawBlade/saw_blade_projectile.tscn")
+
 func _ready() -> void:
 	add_to_group("Player")
 	player_state_manager.initialize(self)
@@ -62,6 +64,20 @@ func _setup_input_strategy() -> void:
 
 func _input(event: InputEvent) -> void:
 	_input_strategy.handle_input_event(self, event)
+	if event.is_action_pressed("fire_saw"):
+		_fire_saw()
+
+func _fire_saw() -> void:
+	if stats.saw_count <= 0:
+		return
+	stats.saw_count -= 1
+	EventBus.saw_fired.emit(stats.saw_count)
+	var blade = _SAW_BLADE_SCENE.instantiate()
+	# Spawn slightly ahead of the player at the same height
+	blade.global_position = global_position + Vector3(0.0, 0.0, -3.0)
+	# Pass the player's current lateral direction for the arc
+	blade.setup(player_direction.x)
+	get_parent().add_child(blade)
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -96,6 +112,11 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Axe"):
 		stats.axe_count = min(stats.axe_count + 1, PlayerStatsResource.MAX_AXE_COUNT)
 		EventBus.axe_picked_up.emit(stats.axe_count)
+		body.queue_free()
+
+	if body.is_in_group("Saw"):
+		stats.saw_count = min(stats.saw_count + 1, PlayerStatsResource.MAX_SAW_COUNT)
+		EventBus.saw_picked_up.emit(stats.saw_count)
 		body.queue_free()
 
 	if body.is_in_group("Coffee"):
