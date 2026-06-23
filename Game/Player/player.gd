@@ -71,6 +71,9 @@ func _input(event: InputEvent) -> void:
 func fire_saw() -> void:
 	if stats.saw_count <= 0:
 		return
+	# Can't fire while stunned — player speed is 0 and the blade would appear stationary.
+	if player_state_manager.current_state_name == "Vuln":
+		return
 	stats.saw_count -= 1
 	EventBus.saw_fired.emit(stats.saw_count)
 	var blade = _SAW_BLADE_SCENE.instantiate()
