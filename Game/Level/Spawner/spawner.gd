@@ -65,6 +65,11 @@ func spawn_obstacle() -> void:
 		randomize()
 		_spawn(ObstacleFactory.ObstacleType.COFFEE, _rand_x())
 
+	var number_of_axes := randi_range(1, 100)
+	if number_of_axes <= 15:
+		randomize()
+		_spawn(ObstacleFactory.ObstacleType.AXE, _rand_x())
+
 
 ## Returns a random x position within the spawn lane defined by MarkerA and MarkerB.
 func _rand_x() -> float:
@@ -81,6 +86,8 @@ func _on_despawner_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Obstacle"):
 		body.queue_free()
 	if body.is_in_group("Coffee"):
+		body.queue_free()
+	if body.is_in_group("Axe"):
 		body.queue_free()
 	if body.is_in_group("SnowPuff"):
 		body.queue_free()

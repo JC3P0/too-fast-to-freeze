@@ -42,3 +42,12 @@ extends Resource
 
 ## Total duration of the jump arc (seconds).
 @export var jump_duration: float = 1.0
+
+# -- Abilities ---------------------------------------------------------------
+
+## Maximum number of axe charges the player can carry at once.
+const MAX_AXE_COUNT: int = 3
+
+## Current axe charges. Auto-activates on the next tree collision when > 0.
+## Reset to 0 at run start; incremented by axe pickups (capped at MAX_AXE_COUNT).
+@export var axe_count: int = 0

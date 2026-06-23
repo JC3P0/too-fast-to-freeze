@@ -76,10 +76,27 @@ func _physics_process(delta: float) -> void:
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Obstacle"):
-		player_state_manager.set_state("Vuln")
-		$HurtTimer.start()
-		body_to_delete = body
-		EventBus.player_hit.emit(body)
+		if stats.axe_count > 0 and body.is_in_group("Tree"):
+			# Axe interception — consume one charge, destroy the tree, never enter Vuln.
+			stats.axe_count -= 1
+			body.get_node("CollisionShape3D").set_deferred("disabled", true)
+			EventBus.tree_cut.emit(body.global_position)
+			EventBus.axe_used.emit(stats.axe_count)
+			# #34 — tween tree to zero scale then free it (no await needed)
+			var tween := body.create_tween().set_parallel(true)
+			tween.tween_property(body, "scale", Vector3.ZERO, 0.25) \
+				.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+			tween.chain().tween_callback(body.queue_free)
+		else:
+			player_state_manager.set_state("Vuln")
+			$HurtTimer.start()
+			body_to_delete = body
+			EventBus.player_hit.emit(body)
+
+	if body.is_in_group("Axe"):
+		stats.axe_count = min(stats.axe_count + 1, PlayerStatsResource.MAX_AXE_COUNT)
+		EventBus.axe_picked_up.emit(stats.axe_count)
+		body.queue_free()
 
 	if body.is_in_group("Coffee"):
 		control.add_freeze_time()

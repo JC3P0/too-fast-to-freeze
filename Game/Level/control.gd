@@ -6,12 +6,16 @@ extends Control
 @onready var freeze_progress_bar = $FreezeProgressBar
 @onready var percentage_of_time
 @onready var game_over_scene = $"../../../GameOverScreen"
-var player: Node = null
+@onready var axe_count_label: Label = $PanelContainer/VBoxContainer/AxeContainer/AxeCount
 
+var player: Node = null
 var coffee_time = 5.0
 
 func _ready() -> void:
 	freeze_timer.connect("timeout", Callable(self, "_on_stop_freeze_timer_timeout"))
+	axe_count_label.text = "0"
+	EventBus.axe_picked_up.connect(_on_axe_count_changed)
+	EventBus.axe_used.connect(_on_axe_count_changed)
 
 func _process(delta: float) -> void:
 	if not player:
@@ -33,3 +37,6 @@ func add_freeze_time():
 		new_time = 60
 	freeze_timer.wait_time = new_time
 	freeze_timer.start()
+
+func _on_axe_count_changed(count: int) -> void:
+	axe_count_label.text = str(count)
