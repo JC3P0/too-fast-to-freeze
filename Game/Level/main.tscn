@@ -5,12 +5,10 @@
 [ext_resource type="Script" uid="uid://b6jcxkh2kam87" path="res://Game/Level/floor.gd" id="1_jn3mv"]
 [ext_resource type="Texture2D" uid="uid://h6hf8pxygdh4" path="res://Assets/Textures/Snow/7/7_height.bmp" id="2_6mbeq"]
 [ext_resource type="PackedScene" uid="uid://18yehieu3brv" path="res://Game/Level/Spawner/spawner.tscn" id="2_ugmdt"]
-[ext_resource type="Script" uid="uid://c4p5ws4ij74wf" path="res://Game/Level/control.gd" id="2_ute07"]
 [ext_resource type="Texture2D" uid="uid://bb26gd7wuw0dy" path="res://Assets/Textures/Snow/7/7_metallic.bmp" id="3_ea6fa"]
 [ext_resource type="Script" uid="uid://dfnu41k3ww6vf" path="res://Game/Level/camera_3d.gd" id="3_m5af0"]
 [ext_resource type="Texture2D" uid="uid://kp1yy28slljc" path="res://Assets/Textures/Snow/7/7_normal.bmp" id="4_7taih"]
-[ext_resource type="Texture2D" uid="uid://j0oau1manjoh" path="res://Assets/PNG/ICE_PROG_OVER.png" id="7_a4ahd"]
-[ext_resource type="Texture2D" uid="uid://bhmxwonbfnjbd" path="res://Assets/PNG/ICE_PROG.png" id="8_5t3sy"]
+[ext_resource type="PackedScene" uid="uid://bbvqs68220nsb" path="res://Game/Level/control.tscn" id="7_g0rfv"]
 [ext_resource type="PackedScene" uid="uid://ce8bjp12uxn7a" path="res://Game/Level/snow_fall.tscn" id="11_gjw61"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kgrb6"]
@@ -48,66 +46,7 @@ skeleton = NodePath("../..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1194394693]
 shape = SubResource("WorldBoundaryShape3D_4ud2c")
 
-[node name="Control" type="Control" parent="." unique_id=888451546]
-layout_mode = 3
-anchors_preset = 0
-offset_right = 127.0
-offset_bottom = 105.0
-script = ExtResource("2_ute07")
-
-[node name="PanelContainer" type="PanelContainer" parent="Control" unique_id=1597904272]
-layout_mode = 0
-offset_top = 63.0
-offset_right = 134.0
-offset_bottom = 115.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer" unique_id=1209452527]
-layout_mode = 2
-
-[node name="SpeedContainer" type="HBoxContainer" parent="Control/PanelContainer/VBoxContainer" unique_id=1343125175]
-layout_mode = 2
-
-[node name="SpeedLabel" type="Label" parent="Control/PanelContainer/VBoxContainer/SpeedContainer" unique_id=1095683961]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Speed : 
-"
-
-[node name="SpeedCurrent" type="Label" parent="Control/PanelContainer/VBoxContainer/SpeedContainer" unique_id=1560053904]
-layout_mode = 2
-text = "00
-"
-
-[node name="DistanceContainer" type="HBoxContainer" parent="Control/PanelContainer/VBoxContainer" unique_id=931820616]
-layout_mode = 2
-
-[node name="DistanceLabel" type="Label" parent="Control/PanelContainer/VBoxContainer/DistanceContainer" unique_id=314982953]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Distance : 
-"
-
-[node name="DistanceCurrent" type="Label" parent="Control/PanelContainer/VBoxContainer/DistanceContainer" unique_id=132458248]
-layout_mode = 2
-text = "00
-"
-
-[node name="FreezeProgressBar" type="TextureProgressBar" parent="Control" unique_id=399171261]
-custom_minimum_size = Vector2(448, 48)
-layout_mode = 0
-offset_left = 351.0
-offset_right = 799.0
-offset_bottom = 48.0
-max_value = 60.0
-step = 0.01
-nine_patch_stretch = true
-texture_over = ExtResource("7_a4ahd")
-texture_progress = ExtResource("8_5t3sy")
-
-[node name="FreezeTimer" type="Timer" parent="Control" unique_id=433818785]
-wait_time = 60.0
-one_shot = true
-autostart = true
+[node name="Control" parent="." unique_id=412818272 instance=ExtResource("7_g0rfv")]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1934839546]
 transform = Transform3D(1, 0, 0, 0, 0.987658, 0.156624, 0, -0.156624, 0.987658, 0, 3.7123, 4.54726)
@@ -123,7 +62,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, 0)
 
 [node name="CollisionShape3D" parent="Spawner/Despawner" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.777428, 0.79557, 212.739)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3789444, 4.7097697, 212.739)
 
 [node name="snow_fall" parent="." unique_id=1288033624 instance=ExtResource("11_gjw61")]
 

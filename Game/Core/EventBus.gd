@@ -43,3 +43,15 @@ signal bot_spawned(bot_node: Node)
 
 ## Fired when the player's axe cuts down a tree. Drives VFX and audio.
 signal tree_cut(position: Vector3)
+
+## Fired when the player picks up an axe. HUD listens to refresh icon count.
+signal axe_picked_up(count: int)
+
+## Fired when an axe charge is consumed on a tree hit. HUD listens to grey out an icon.
+signal axe_used(count: int)
+
+## Fired when the player picks up a saw blade. HUD listens to show the fire button.
+signal saw_picked_up(count: int)
+
+## Fired when the player fires the saw blade. HUD listens to hide the fire button.
+signal saw_fired(count: int)

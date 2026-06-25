@@ -6,12 +6,24 @@ extends Control
 @onready var freeze_progress_bar = $FreezeProgressBar
 @onready var percentage_of_time
 @onready var game_over_scene = $"../../../GameOverScreen"
-var player: Node = null
+@onready var axe_count_label: Label = $PanelContainer/VBoxContainer/AxeContainer/AxeCount
+@onready var saw_count_label: Label = $PanelContainer/VBoxContainer/SawContainer/SawCount
+@onready var saw_button: Button = $ButtonSawBlade
 
+var player: Node = null
 var coffee_time = 5.0
 
 func _ready() -> void:
 	freeze_timer.connect("timeout", Callable(self, "_on_stop_freeze_timer_timeout"))
+	axe_count_label.text = "0"
+	EventBus.axe_picked_up.connect(_on_axe_count_changed)
+	EventBus.axe_used.connect(_on_axe_count_changed)
+	# Saw blade HUD — hidden until player picks one up
+	saw_count_label.text = "0"
+	_set_saw_visible(false)
+	EventBus.saw_picked_up.connect(_on_saw_picked_up)
+	EventBus.saw_fired.connect(_on_saw_fired)
+	saw_button.pressed.connect(_on_saw_button_pressed)
 
 func _process(delta: float) -> void:
 	if not player:
@@ -33,3 +45,23 @@ func add_freeze_time():
 		new_time = 60
 	freeze_timer.wait_time = new_time
 	freeze_timer.start()
+
+func _on_axe_count_changed(count: int) -> void:
+	axe_count_label.text = str(count)
+
+# -- Saw blade HUD -----------------------------------------------------------
+
+func _on_saw_picked_up(count: int) -> void:
+	saw_count_label.text = str(count)
+	_set_saw_visible(count > 0)
+
+func _on_saw_fired(count: int) -> void:
+	saw_count_label.text = str(count)
+	_set_saw_visible(count > 0)
+
+func _on_saw_button_pressed() -> void:
+	if player:
+		player.fire_saw()
+
+func _set_saw_visible(visible: bool) -> void:
+	saw_button.visible = visible

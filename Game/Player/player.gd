@@ -40,6 +40,8 @@ var body_to_delete
 var _input_strategy: InputStrategy
 var _camera: Camera3D = null
 
+const _SAW_BLADE_SCENE := preload("res://Game/Obstacles/SawBlade/saw_blade_projectile.tscn")
+
 func _ready() -> void:
 	add_to_group("Player")
 	player_state_manager.initialize(self)
@@ -62,6 +64,25 @@ func _setup_input_strategy() -> void:
 
 func _input(event: InputEvent) -> void:
 	_input_strategy.handle_input_event(self, event)
+	if event.is_action_pressed("fire_saw"):
+		fire_saw()
+
+## Public so the HUD button can also trigger it.
+func fire_saw() -> void:
+	if stats.saw_count <= 0:
+		return
+	# Can't fire while stunned — player speed is 0 and the blade would appear stationary.
+	if player_state_manager.current_state_name == "Vuln":
+		return
+	stats.saw_count -= 1
+	EventBus.saw_fired.emit(stats.saw_count)
+	var blade = _SAW_BLADE_SCENE.instantiate()
+	# Add to scene tree first so global_position is valid
+	get_parent().add_child(blade)
+	# Spawn slightly ahead of the player at the same height
+	blade.global_position = global_position + Vector3(0.0, 0.0, -3.0)
+	# Pass the player's current lateral direction for the arc
+	blade.setup(player_direction.x)
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
@@ -76,10 +97,32 @@ func _physics_process(delta: float) -> void:
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Obstacle"):
-		player_state_manager.set_state("Vuln")
-		$HurtTimer.start()
-		body_to_delete = body
-		EventBus.player_hit.emit(body)
+		if stats.axe_count > 0 and body.is_in_group("Tree"):
+			# Axe interception — consume one charge, destroy the tree, never enter Vuln.
+			stats.axe_count -= 1
+			body.get_node("CollisionShape3D").set_deferred("disabled", true)
+			EventBus.tree_cut.emit(body.global_position)
+			EventBus.axe_used.emit(stats.axe_count)
+			# #34 — tween tree to zero scale then free it (no await needed)
+			var tween := body.create_tween().set_parallel(true)
+			tween.tween_property(body, "scale", Vector3.ZERO, 0.25) \
+				.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+			tween.chain().tween_callback(body.queue_free)
+		else:
+			player_state_manager.set_state("Vuln")
+			$HurtTimer.start()
+			body_to_delete = body
+			EventBus.player_hit.emit(body)
+
+	if body.is_in_group("Axe"):
+		stats.axe_count = min(stats.axe_count + 1, PlayerStatsResource.MAX_AXE_COUNT)
+		EventBus.axe_picked_up.emit(stats.axe_count)
+		body.queue_free()
+
+	if body.is_in_group("Saw"):
+		stats.saw_count = min(stats.saw_count + 1, PlayerStatsResource.MAX_SAW_COUNT)
+		EventBus.saw_picked_up.emit(stats.saw_count)
+		body.queue_free()
 
 	if body.is_in_group("Coffee"):
 		control.add_freeze_time()

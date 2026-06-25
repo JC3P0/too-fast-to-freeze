@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://baxepickup001"]
+
+[ext_resource type="Script" uid="uid://dc6jrmhccuxwm" path="res://Game/Obstacles/obstacle_move.gd" id="1_pqlxo"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_axe01"]
+size = Vector3(1.384375, 1.5, 0.8060791)
+
+[sub_resource type="BoxMesh" id="BoxMesh_axe01"]
+size = Vector3(0.6, 1.5, 0.3)
+
+[sub_resource type="PrismMesh" id="PrismMesh_fojmm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fojmm"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_axe01"]
+radius = 1.5
+height = 4.0
+
+[node name="AxePickup" type="CharacterBody3D" unique_id=971190135 groups=["Axe"]]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_pqlxo")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1955723683]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12812495, 0.75, -0.02420652)
+shape = SubResource("BoxShape3D_axe01")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1057817280]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+mesh = SubResource("BoxMesh_axe01")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=2089516615]
+transform = Transform3D(-3.2564984e-08, 1.075, -3.3220655e-08, 0, -4.6989744e-08, -0.76, -0.745, -4.6989744e-08, 1.4521209e-15, 0.24970809, 1.6401899, -0.011269599)
+mesh = SubResource("PrismMesh_fojmm")
+surface_material_override/0 = SubResource("StandardMaterial3D_fojmm")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1687367623]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1714763420]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_axe01")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
