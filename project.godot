@@ -24,6 +24,7 @@ config/icon="res://icon.svg"
 GlobalState="*res://Game/Level/GlobalState.gd"
 GameStateManager="*res://Game/Core/game_state_manager.gd"
 EventBus="*res://Game/Core/EventBus.gd"
+HighscoreRepository="*res://Game/Core/HighscoreRepository.gd"
 
 [input]
 
