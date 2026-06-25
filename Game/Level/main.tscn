@@ -27,6 +27,9 @@ size = Vector2(150, 200)
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_4ud2c"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_g0rfv"]
+size = Vector3(1500, 40, 5)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_yc0i2"]
 size = Vector3(1, 6.46594, 5.09808)
 
@@ -63,6 +66,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 0, 0)
 
 [node name="CollisionShape3D" parent="Spawner/Despawner" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3789444, 4.7097697, 212.739)
+shape = SubResource("BoxShape3D_g0rfv")
 
 [node name="snow_fall" parent="." unique_id=1288033624 instance=ExtResource("11_gjw61")]
 
