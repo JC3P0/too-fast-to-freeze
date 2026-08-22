@@ -75,6 +75,15 @@ func spawn_obstacle() -> void:
 		randomize()
 		_spawn(ObstacleFactory.ObstacleType.SAW_PICKUP, _rand_x())
 
+	# Hammer pickup - placeholder flat-chance roll, same shape as axe/saw above.
+	# Notes/TEST-TIMED-ABILITIES.md §5 point 3 calls for this to eventually gate
+	# on HammerAbility.is_maxed() and scale boulder count off hammer stacks -
+	# deferred until the AbilityController nodes are live on Player.tscn.
+	var number_of_hammers := randi_range(1, 100)
+	if number_of_hammers <= 12:
+		randomize()
+		_spawn(ObstacleFactory.ObstacleType.HAMMER, _rand_x())
+
 
 ## Returns a random x position within the spawn lane defined by MarkerA and MarkerB.
 func _rand_x() -> float:
@@ -95,6 +104,8 @@ func _on_despawner_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Axe"):
 		body.queue_free()
 	if body.is_in_group("Saw"):
+		body.queue_free()
+	if body.is_in_group("Hammer"):
 		body.queue_free()
 	if body.is_in_group("SnowPuff"):
 		body.queue_free()

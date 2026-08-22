@@ -28,6 +28,16 @@ enum InputMode { STATE_MACHINE, DIRECTIONAL }
 
 @onready var control: Control = $"../Control"
 
+## Timed-abilities test (test/timed-abilities branch) - AbilityController nodes.
+## get_node_or_null so the game keeps working before these children exist on
+## Player.tscn. Add child Nodes named "AxeAbility"/"SawAbility"/"HammerAbility"
+## with the matching scripts attached to turn each one on, plus "AxeSwingArea"/
+## "HammerSwingArea" Area3D nodes for melee detection. See
+## Notes/TEST-TIMED-ABILITIES.md.
+@onready var axe_ability := get_node_or_null("AxeAbility") as AxeAbility
+@onready var saw_ability := get_node_or_null("SawAbility") as SawAbility
+@onready var hammer_ability := get_node_or_null("HammerAbility") as HammerAbility
+
 var player_speed: float = 0.0
 ## Unified movement state — set each frame by the active InputStrategy.
 ## StateMachineStrategy mirrors player_speed with direction straight ahead.
@@ -64,10 +74,22 @@ func _setup_input_strategy() -> void:
 
 func _input(event: InputEvent) -> void:
 	_input_strategy.handle_input_event(self, event)
-	if event.is_action_pressed("fire_saw"):
-		fire_saw()
+	# Timed-abilities test - button-triggered axe/saw/hammer via AbilityController,
+	# replacing the old auto-trigger axe + key "1" saw fire below.
+	# fire_axe/fire_hammer are new input actions Josh adds in Project Settings;
+	# fire_saw already exists (currently bound to "1" - remap to Q/B for this test).
+	# See Notes/TEST-TIMED-ABILITIES.md.
+	if event.is_action_pressed("fire_axe") and axe_ability:
+		axe_ability.try_activate(self)
+	if event.is_action_pressed("fire_saw") and saw_ability:
+		saw_ability.try_activate(self)
+	if event.is_action_pressed("fire_hammer") and hammer_ability:
+		hammer_ability.try_activate(self)
 
-## Public so the HUD button can also trigger it.
+## OLD consumable-charge saw fire - superseded by SawAbility.try_activate()
+## above (no longer called from _input()). Left in place unused per
+## Notes/TEST-TIMED-ABILITIES.md §1 rather than deleted. If a HUD button
+## still calls this directly, repoint it to saw_ability.try_activate(self).
 func fire_saw() -> void:
 	if stats.saw_count <= 0:
 		return
@@ -97,31 +119,38 @@ func _physics_process(delta: float) -> void:
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Obstacle"):
-		if stats.axe_count > 0 and body.is_in_group("Tree"):
-			# Axe interception — consume one charge, destroy the tree, never enter Vuln.
-			stats.axe_count -= 1
-			body.get_node("CollisionShape3D").set_deferred("disabled", true)
-			EventBus.tree_cut.emit(body.global_position)
-			EventBus.axe_used.emit(stats.axe_count)
-			# #34 — tween tree to zero scale then free it (no await needed)
-			var tween := body.create_tween().set_parallel(true)
-			tween.tween_property(body, "scale", Vector3.ZERO, 0.25) \
-				.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
-			tween.chain().tween_callback(body.queue_free)
-		else:
-			player_state_manager.set_state("Vuln")
-			$HurtTimer.start()
-			body_to_delete = body
-			EventBus.player_hit.emit(body)
+		# --- OLD auto-trigger axe interception (charge-based) - disabled for
+		# --- the timed-abilities test. Axe now fires on the fire_axe button
+		# --- via AxeAbility, not reactively on tree collision. Left commented
+		# --- rather than deleted per Notes/TEST-TIMED-ABILITIES.md §1
+		# --- "Keeping the old system intact for now."
+		# if stats.axe_count > 0 and body.is_in_group("Tree"):
+		# 	stats.axe_count -= 1
+		# 	body.get_node("CollisionShape3D").set_deferred("disabled", true)
+		# 	EventBus.tree_cut.emit(body.global_position)
+		# 	EventBus.axe_used.emit(stats.axe_count)
+		# 	var tween := body.create_tween().set_parallel(true)
+		# 	tween.tween_property(body, "scale", Vector3.ZERO, 0.25) \
+		# 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+		# 	tween.chain().tween_callback(body.queue_free)
+		player_state_manager.set_state("Vuln")
+		$HurtTimer.start()
+		body_to_delete = body
+		EventBus.player_hit.emit(body)
 
 	if body.is_in_group("Axe"):
-		stats.axe_count = min(stats.axe_count + 1, PlayerStatsResource.MAX_AXE_COUNT)
-		EventBus.axe_picked_up.emit(stats.axe_count)
+		if axe_ability:
+			axe_ability.add_stack()
 		body.queue_free()
 
 	if body.is_in_group("Saw"):
-		stats.saw_count = min(stats.saw_count + 1, PlayerStatsResource.MAX_SAW_COUNT)
-		EventBus.saw_picked_up.emit(stats.saw_count)
+		if saw_ability:
+			saw_ability.add_stack()
+		body.queue_free()
+
+	if body.is_in_group("Hammer"):
+		if hammer_ability:
+			hammer_ability.add_stack()
 		body.queue_free()
 
 	if body.is_in_group("Coffee"):

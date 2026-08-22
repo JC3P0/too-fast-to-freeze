@@ -55,3 +55,14 @@ signal saw_picked_up(count: int)
 
 ## Fired when the player fires the saw blade. HUD listens to hide the fire button.
 signal saw_fired(count: int)
+
+# -- Abilities (timed/growing system - test/timed-abilities branch) --------
+# See Notes/TEST-TIMED-ABILITIES.md. Distinct from the axe/saw signals above,
+# which belong to the old consumable-charge system left dormant for this test.
+
+## Fired whenever any ability's stack count changes (a pickup was collected).
+## HUD listens per-id to update its "stacks/max" and power % display.
+signal ability_stack_changed(id: StringName, stacks: int)
+
+## Fired whenever any ability successfully activates (button press, off cooldown).
+signal ability_fired(id: StringName)

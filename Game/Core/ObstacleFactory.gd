@@ -22,6 +22,7 @@ enum ObstacleType {
 	COFFEE,
 	AXE,
 	SAW_PICKUP,
+	HAMMER,
 }
 
 const _SCENES: Dictionary = {
@@ -36,6 +37,7 @@ const _SCENES: Dictionary = {
 	ObstacleType.COFFEE:       preload("res://Game/Obstacles/coffee.tscn"),
 	ObstacleType.AXE:          preload("res://Game/Obstacles/Axe/axe_pickup.tscn"),
 	ObstacleType.SAW_PICKUP:   preload("res://Game/Obstacles/SawBlade/saw_blade_pickup.tscn"),
+	ObstacleType.HAMMER:       preload("res://Game/Obstacles/Hammer/hammer_pickup.tscn"),
 }
 
 

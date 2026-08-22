@@ -15,10 +15,20 @@
 [ext_resource type="Script" uid="uid://cdmslms8vieei" path="res://Game/Player/States/stop_turn.gd" id="8_ejxtu"]
 [ext_resource type="Script" uid="uid://dqmw12usdlw01" path="res://Game/Player/States/jump.gd" id="9_ubqs3"]
 [ext_resource type="Script" uid="uid://didepfturi7rt" path="res://Game/Player/States/vulnerable.gd" id="13_25frb"]
+[ext_resource type="Script" uid="uid://0fwok6xg84f3" path="res://Game/Player/Abilities/axe_ability.gd" id="16_86ark"]
+[ext_resource type="Script" uid="uid://djewoeuibdd0b" path="res://Game/Player/Abilities/hammer_ability.gd" id="17_wg23h"]
+[ext_resource type="Script" uid="uid://peg8tae5dhx" path="res://Game/Player/Abilities/saw_ability.gd" id="18_u78gx"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54qhv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1w2v0"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_cdlqx"]
+height = 2.4838867
+radius = 3.571289
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_86ark"]
+radius = 2.508789
 
 [node name="Player" type="CharacterBody3D" unique_id=1863745662]
 script = ExtResource("1_ih0iw")
@@ -93,6 +103,31 @@ shape = SubResource("CapsuleShape3D_1w2v0")
 [node name="HurtTimer" type="Timer" parent="." unique_id=628241402]
 wait_time = 1.5
 one_shot = true
+
+[node name="AxeAbility" type="Node" parent="." unique_id=51331014]
+script = ExtResource("16_86ark")
+
+[node name="HammerAbility" type="Node" parent="." unique_id=186479728]
+script = ExtResource("17_wg23h")
+
+[node name="SawAbility" type="Node" parent="." unique_id=699010567]
+script = ExtResource("18_u78gx")
+
+[node name="AxeSwingArea" type="Area3D" parent="." unique_id=687171805]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AxeSwingArea" unique_id=1066699239]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1130435, -1.7688314)
+shape = SubResource("CylinderShape3D_cdlqx")
+
+[node name="HammerSwingArea" type="Area3D" parent="." unique_id=802257321]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HammerSwingArea" unique_id=1848302589]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2123773, -0.8440052)
+shape = SubResource("CylinderShape3D_86ark")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
