@@ -4,11 +4,19 @@ extends Area3D
 ## Raise this until it feels right. Start around 15.
 const SPEED := 15.0
 
-const MAX_HITS := 6
 const ARC_RATE := 2.0
 const LATERAL_SCALE := 60.0
 const SPIN_SPEED := 4.0
 
+## Timed-abilities test - hit cap now grows with saw stacks instead of
+## being a flat 6. Base/growth/cap are tuning knobs, same spirit as
+## AbilityResource's cooldown/area fields, just kept local since this is
+## saw-projectile-specific (axe/hammer don't count hits this way).
+const MAX_HITS_BASE := 6
+const MAX_HITS_PER_STACK := 1
+const MAX_HITS_CAP := 16
+
+var max_hits: int = MAX_HITS_BASE
 var _lateral_velocity: float = 0.0
 var _hits: int = 0
 var _player: Node3D = null
@@ -17,8 +25,16 @@ func _ready() -> void:
 	$SafetyTimer.start()
 	_player = get_tree().get_first_node_in_group("Player")
 
-func setup(lateral_input: float) -> void:
-	_lateral_velocity = -lateral_input * LATERAL_SCALE
+## Timed-abilities test - stack_count grows max_hits, and the lateral kick
+## now scales down at low player speed instead of always using the full
+## LATERAL_SCALE value. fov_ref_speed is the same "what counts as full
+## speed" reference player.gd already uses for its FOV lerp.
+func setup(lateral_input: float, stack_count: int = 1) -> void:
+	max_hits = min(MAX_HITS_CAP, MAX_HITS_BASE + (stack_count - 1) * MAX_HITS_PER_STACK)
+	var speed_ratio: float = 1.0
+	if _player and "fov_ref_speed" in _player and _player.fov_ref_speed > 0.0:
+		speed_ratio = clamp(_player.player_current_speed / _player.fov_ref_speed, 0.0, 1.0)
+	_lateral_velocity = -lateral_input * LATERAL_SCALE * speed_ratio
 
 func _physics_process(delta: float) -> void:
 	if not _player:
@@ -49,7 +65,7 @@ func _cut_tree(tree: Node3D) -> void:
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(tree.queue_free)
 	_hits += 1
-	if _hits >= MAX_HITS:
+	if _hits >= max_hits:
 		_destroy_blade()
 
 func _destroy_blade() -> void:

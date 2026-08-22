@@ -60,6 +60,14 @@ func get_power_percent() -> float:
 		return 0.0
 	return float(current_stacks) / float(stats.max_stacks)
 
+## For the HUD - seconds left before this ability can fire again.
+func get_cooldown_remaining() -> float:
+	return _cooldown_remaining
+
+## For the HUD - true once the cooldown has finished and the ability can fire.
+func is_ready() -> bool:
+	return _cooldown_remaining <= 0.0
+
 ## Template Method hook - subclasses implement the actual gameplay effect.
 func _perform_effect(_player: CharacterBody3D, _area_scale: float) -> void:
 	pass

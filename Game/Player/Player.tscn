@@ -16,8 +16,11 @@
 [ext_resource type="Script" uid="uid://dqmw12usdlw01" path="res://Game/Player/States/jump.gd" id="9_ubqs3"]
 [ext_resource type="Script" uid="uid://didepfturi7rt" path="res://Game/Player/States/vulnerable.gd" id="13_25frb"]
 [ext_resource type="Script" uid="uid://0fwok6xg84f3" path="res://Game/Player/Abilities/axe_ability.gd" id="16_86ark"]
+[ext_resource type="Resource" uid="uid://cny8tws0a1tlm" path="res://Game/Data/axe_stats.tres" id="17_cdlqx"]
 [ext_resource type="Script" uid="uid://djewoeuibdd0b" path="res://Game/Player/Abilities/hammer_ability.gd" id="17_wg23h"]
 [ext_resource type="Script" uid="uid://peg8tae5dhx" path="res://Game/Player/Abilities/saw_ability.gd" id="18_u78gx"]
+[ext_resource type="Resource" uid="uid://bb2hdk7prsmh8" path="res://Game/Data/hammer_stats.tres" id="19_rmqab"]
+[ext_resource type="Resource" uid="uid://btcrfy6lldlle" path="res://Game/Data/saw_stats.tres" id="21_vr2vl"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54qhv"]
 
@@ -106,12 +109,15 @@ one_shot = true
 
 [node name="AxeAbility" type="Node" parent="." unique_id=51331014]
 script = ExtResource("16_86ark")
+stats = ExtResource("17_cdlqx")
 
 [node name="HammerAbility" type="Node" parent="." unique_id=186479728]
 script = ExtResource("17_wg23h")
+stats = ExtResource("19_rmqab")
 
 [node name="SawAbility" type="Node" parent="." unique_id=699010567]
 script = ExtResource("18_u78gx")
+stats = ExtResource("21_vr2vl")
 
 [node name="AxeSwingArea" type="Area3D" parent="." unique_id=687171805]
 collision_layer = 0
