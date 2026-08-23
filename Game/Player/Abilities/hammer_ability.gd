@@ -29,7 +29,7 @@ func _smash_boulder(boulder: Node3D) -> void:
 	if shape:
 		shape.set_deferred("disabled", true)
 	var tween := boulder.create_tween().set_parallel(true)
-	tween.tween_property(boulder, "scale", Vector3.ZERO, 0.25) \
+	tween.tween_property(boulder, "scale", Vector3.ONE * 0.001, 0.25) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(boulder.queue_free)
 

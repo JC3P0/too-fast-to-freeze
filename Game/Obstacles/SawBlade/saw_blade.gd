@@ -61,7 +61,7 @@ func _cut_tree(tree: Node3D) -> void:
 	tree.get_node("CollisionShape3D").set_deferred("disabled", true)
 	EventBus.tree_cut.emit(tree.global_position)
 	var tween := tree.create_tween().set_parallel(true)
-	tween.tween_property(tree, "scale", Vector3.ZERO, 0.25) \
+	tween.tween_property(tree, "scale", Vector3.ONE * 0.001, 0.25) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(tree.queue_free)
 	_hits += 1
