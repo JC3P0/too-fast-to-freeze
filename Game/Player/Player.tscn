@@ -24,6 +24,36 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54qhv"]
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_cdlqx"]
+top_radius = 0.25
+bottom_radius = 0.25
+height = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rmqab"]
+albedo_color = Color(0.64705884, 0.16470589, 0.16470589, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vr2vl"]
+size = Vector3(1.25, 0.5, 0.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hgjse"]
+albedo_color = Color(0.0035191667, 0.0035191681, 0.0035191672, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cdlqx"]
+size = Vector3(0.6, 1.5, 0.3)
+
+[sub_resource type="PrismMesh" id="PrismMesh_rmqab"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vr2vl"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_hgjse"]
+resource_name = "axe_swing_left"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rmqab"]
+_data = {
+&"axe_swing_left": SubResource("Animation_hgjse")
+}
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1w2v0"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_cdlqx"]
@@ -32,6 +62,19 @@ radius = 3.571289
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_86ark"]
 radius = 2.508789
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rangering"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 0.6, 0.1, 0.55)
+
+[sub_resource type="TorusMesh" id="TorusMesh_axering"]
+inner_radius = 3.035595
+outer_radius = 3.571289
+
+[sub_resource type="TorusMesh" id="TorusMesh_hammerring"]
+inner_radius = 2.132471
+outer_radius = 2.508789
 
 [node name="Player" type="CharacterBody3D" unique_id=1863745662]
 script = ExtResource("1_ih0iw")
@@ -47,23 +90,51 @@ shape = SubResource("CapsuleShape3D_54qhv")
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Skeleton3D" parent="Player4/Armature" index="0"]
-bones/0/position = Vector3(0, -0.0106388, 0)
-bones/0/rotation = Quaternion(0.00525347, 0, -1.1665e-18, 0.999986)
-bones/1/rotation = Quaternion(-0.0646343, -1.76144e-24, 1.43517e-17, 0.997909)
+bones/0/position = Vector3(0, -0.010638773, 0)
+bones/0/rotation = Quaternion(0.265384, 0, -5.892708e-17, 0.9641428)
+bones/1/rotation = Quaternion(-0.0646343, -1.761442e-24, 1.4351693e-17, 0.997909)
 bones/2/rotation = Quaternion(8.43187e-08, 8.43009e-08, -0.762365, 0.647147)
-bones/3/rotation = Quaternion(0.140357, -0.727946, 0.170609, 0.649067)
-bones/4/rotation = Quaternion(0.0446356, 0.0444178, -0.0132046, 0.997928)
+bones/3/rotation = Quaternion(0.1323418, -0.1638392, -0.46470752, 0.860052)
+bones/4/rotation = Quaternion(0.60265887, -0.15122974, -0.116134025, 0.77488375)
 bones/6/rotation = Quaternion(8.43187e-08, -8.43009e-08, 0.762365, 0.647147)
-bones/7/rotation = Quaternion(0.140356, 0.727946, -0.170609, 0.649067)
-bones/8/rotation = Quaternion(0.0446357, -0.0444178, 0.0132046, 0.997928)
-bones/10/rotation = Quaternion(0.605867, 0.259364, 0.658196, -0.363915)
+bones/7/rotation = Quaternion(0.1323418, 0.1638392, 0.46470752, 0.860052)
+bones/8/rotation = Quaternion(0.60265887, 0.15122978, 0.11613405, 0.7748837)
+bones/10/rotation = Quaternion(0.6043016, 0.36179626, 0.60753864, 0.36717835)
 bones/10/scale = Vector3(1, 1, 1)
-bones/11/rotation = Quaternion(-0.033531, -0.743686, 0.0393936, 0.666524)
-bones/12/rotation = Quaternion(1.39698e-09, -6.60467e-18, -1.42609e-08, 1)
-bones/13/rotation = Quaternion(0.605867, -0.259364, -0.658196, -0.363915)
+bones/11/rotation = Quaternion(0.004273437, -0.0012090284, 0.2722365, 0.96222013)
+bones/12/rotation = Quaternion(-4.6566123e-10, 3.2757353e-16, -2.328322e-10, 1)
+bones/13/rotation = Quaternion(0.6043016, -0.36179626, -0.60753864, 0.36717835)
 bones/13/scale = Vector3(1, 1, 1)
-bones/14/rotation = Quaternion(-0.033531, 0.743686, -0.0393936, 0.666524)
-bones/15/rotation = Quaternion(4.65661e-10, 5.88903e-17, 7.33417e-09, 1)
+bones/14/rotation = Quaternion(0.004273437, 0.0012090284, -0.2722365, 0.96222013)
+bones/15/rotation = Quaternion(-4.6566123e-10, -3.2757353e-16, 2.328322e-10, 1)
+
+[node name="hammer_base" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/LeftArmLeftLower" index="0" unique_id=352281963]
+transform = Transform3D(0.36499998, -2.2563295e-08, 9.346028e-09, 2.2563299e-08, 0.25809395, -0.25809395, 9.346021e-09, 0.25809395, 0.25809395, 0.5263209, 0.2502439, 0.7794617)
+visible = false
+mesh = SubResource("CylinderMesh_cdlqx")
+surface_material_override/0 = SubResource("StandardMaterial3D_rmqab")
+
+[node name="hammer_head" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/LeftArmLeftLower" index="1" unique_id=277583746]
+transform = Transform3D(-2.5300677e-08, -2.2563293e-08, 0.36499995, 0.25809392, 0.25809392, 3.384494e-08, -0.25809392, 0.25809392, -1.935625e-09, 0.5263209, 0.43087494, 0.9600927)
+visible = false
+mesh = SubResource("BoxMesh_vr2vl")
+surface_material_override/0 = SubResource("StandardMaterial3D_hgjse")
+
+[node name="axe_base" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/RightArmLeftLower" index="0" unique_id=2052875772]
+transform = Transform3D(-1.1103639e-08, -2.1855698e-08, -0.353, -0.17349999, 0.43301266, -7.715064e-09, 0.3005108, 0.24999999, -1.7497364e-08, -0.54151815, 0.15311766, 0.65517753)
+visible = false
+mesh = SubResource("BoxMesh_cdlqx")
+skeleton = NodePath("../..")
+
+[node name="axe_head" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/RightArmLeftLower" index="1" unique_id=1608464237]
+transform = Transform3D(0.34699997, 5.856222e-09, 1.5430121e-08, 1.5167853e-08, -0.25000003, -0.30570692, 4.064219e-09, 0.4330127, -0.1765, -0.55003154, 0.4790455, 0.96964246)
+visible = false
+mesh = SubResource("PrismMesh_rmqab")
+skeleton = NodePath("../..")
+surface_material_override/0 = SubResource("StandardMaterial3D_vr2vl")
+
+[node name="AnimationPlayer" parent="Player4" index="1"]
+libraries/Abilities = SubResource("AnimationLibrary_rmqab")
 
 [node name="hard_trail_particles" parent="." unique_id=210944192 instance=ExtResource("3_j3gwb")]
 
@@ -127,6 +198,12 @@ collision_mask = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1130435, -1.7688314)
 shape = SubResource("CylinderShape3D_cdlqx")
 
+[node name="RangeRing" type="MeshInstance3D" parent="AxeSwingArea" unique_id=1066699240]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -1.7688314)
+visible = false
+mesh = SubResource("TorusMesh_axering")
+material_override = SubResource("StandardMaterial3D_rangering")
+
 [node name="HammerSwingArea" type="Area3D" parent="." unique_id=802257321]
 collision_layer = 0
 collision_mask = 2
@@ -134,6 +211,12 @@ collision_mask = 2
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HammerSwingArea" unique_id=1848302589]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2123773, -0.8440052)
 shape = SubResource("CylinderShape3D_86ark")
+
+[node name="RangeRing" type="MeshInstance3D" parent="HammerSwingArea" unique_id=1848302590]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.8440052)
+visible = false
+mesh = SubResource("TorusMesh_hammerring")
+material_override = SubResource("StandardMaterial3D_rangering")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]

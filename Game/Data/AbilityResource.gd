@@ -12,6 +12,15 @@ extends Resource
 @export var input_action: StringName  # "fire_axe" | "fire_saw" | "fire_hammer"
 @export var icon: Texture2D
 
+## Timed-abilities test - tween-based swing. Spins the whole character
+## (Player4) 360 degrees, direction matched to whichever way the player is
+## currently turning. swing_weapon_paths are this ability's weapon mesh
+## pieces (relative to Player) to show for the duration of the spin, e.g.
+## "Player4/Armature/Skeleton3D/RightArmLeftLower/axe_base". Leave empty to
+## skip the swing entirely. See Notes/TEST-TIMED-ABILITIES.md.
+@export var swing_weapon_paths: Array[String] = []
+@export var swing_duration: float = 0.75
+
 @export var start_stacks: int = 1
 @export var max_stacks: int = 10      # tentative global cap - see Open Questions in the doc
 

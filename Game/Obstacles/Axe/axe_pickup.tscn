@@ -26,11 +26,11 @@ script = ExtResource("1_pqlxo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12812495, 0.75, -0.02420652)
 shape = SubResource("BoxShape3D_axe01")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1057817280]
+[node name="axe_base" type="MeshInstance3D" parent="." unique_id=1057817280]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 mesh = SubResource("BoxMesh_axe01")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=2089516615]
+[node name="axe_head" type="MeshInstance3D" parent="." unique_id=2089516615]
 transform = Transform3D(-3.2564984e-08, 1.075, -3.3220655e-08, 0, -4.6989744e-08, -0.76, -0.745, -4.6989744e-08, 1.4521209e-15, 0.24970809, 1.6401899, -0.011269599)
 mesh = SubResource("PrismMesh_fojmm")
 surface_material_override/0 = SubResource("StandardMaterial3D_fojmm")

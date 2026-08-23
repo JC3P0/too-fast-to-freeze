@@ -106,10 +106,77 @@ func fire_saw() -> void:
 	# Pass the player's current lateral direction for the arc
 	blade.setup(player_direction.x)
 
+## Timed-abilities test - shared full-character spin used by every ability's
+## swing. Adds a decaying rotation OFFSET on top of Player4's normal,
+## input-driven rotation (see the _physics_process hook below) rather than
+## tweening an absolute rotation value. Player4's own rotation keeps
+## tracking the player's actual current steering every frame no matter
+## what the spin is doing, so if the player changes direction mid-spin the
+## offset just decays down to whatever the character should now be facing,
+## instead of finishing in a stale direction and snapping. Shows
+## weapon_paths for the duration of the spin, then hides them. Called from
+## AbilityController._play_swing(). See Notes/TEST-TIMED-ABILITIES.md.
+var _swing_tween: Tween
+var _swing_offset: float = 0.0
+var _swing_weapons: Array[Node3D] = []
+
+func play_ability_swing(weapon_paths: Array[String], duration: float) -> void:
+	if _swing_tween and _swing_tween.is_valid():
+		_swing_tween.kill()
+	for weapon in _swing_weapons:
+		weapon.visible = false
+	_swing_weapons.clear()
+	for path in weapon_paths:
+		var weapon := get_node_or_null(path) as Node3D
+		if weapon:
+			_swing_weapons.append(weapon)
+	for weapon in _swing_weapons:
+		weapon.visible = true
+	# player_direction.x is the live steering signal from DirectionalStrategy
+	# (also what blade.setup() reads). Confirmed by testing: negative x reads
+	# as "steering left" for this spin's direction (the opposite of the sign
+	# math in directional_strategy.gd's TURNING state, which is about the
+	# model's yaw, not this spin). Dead center (straight ahead) defaults to
+	# spinning right - change facing_left's condition below if you'd rather
+	# default left.
+	var facing_left: bool = player_direction.x < 0.0
+	var direction: float = 1.0 if facing_left else -1.0
+	_swing_tween = create_tween()
+	_swing_tween.tween_method(_set_swing_offset, direction * TAU, 0.0, duration)
+	_swing_tween.finished.connect(_on_ability_swing_finished)
+
+func _set_swing_offset(value: float) -> void:
+	_swing_offset = value
+
+func _on_ability_swing_finished() -> void:
+	_swing_offset = 0.0
+	for weapon in _swing_weapons:
+		weapon.visible = false
+	_swing_weapons.clear()
+
+## Called from vulnerable.gd when the player gets hit mid-swing. Clears the
+## spin offset and hides the weapon immediately, since a killed tween does
+## not fire its "finished" signal on its own.
+func interrupt_ability_swing() -> void:
+	if _swing_tween and _swing_tween.is_valid():
+		_swing_tween.kill()
+	_swing_offset = 0.0
+	for weapon in _swing_weapons:
+		weapon.visible = false
+	_swing_weapons.clear()
+
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	_input_strategy.process_input(self, delta)
+	# Timed-abilities test - apply the swing spin offset on top of whatever
+	# rotation the input strategy just set this frame, so it always decays
+	# toward the player's actual current facing. See play_ability_swing()
+	# above. Notes/TEST-TIMED-ABILITIES.md.
+	if _swing_offset != 0.0:
+		var visual := $Player4 as Node3D
+		if visual:
+			visual.rotation.y += _swing_offset
 	var distance_this_frame = (player_speed * delta) / 2
 	GlobalState.total_distance += distance_this_frame
 	if _camera == null:

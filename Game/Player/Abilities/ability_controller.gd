@@ -32,8 +32,22 @@ func try_activate(player: CharacterBody3D) -> void:
 	if player.player_state_manager.current_state_name == "Vuln":
 		return
 	_perform_effect(player, get_area_scale())
+	_play_swing(player)
 	_cooldown_remaining = get_cooldown()
 	EventBus.ability_fired.emit(stats.id)
+
+## Timed-abilities test - purely cosmetic, fire-and-forget. Delegates to
+## player.play_ability_swing(), which spins the whole character (Player4)
+## and shows this ability's weapon mesh pieces for the duration of the
+## spin. Deliberately does NOT delay or gate _perform_effect() above, and
+## does NOT grant any invincibility while it plays - the player can still
+## get hit mid-swing, same as before. If hit mid-swing,
+## player.interrupt_ability_swing() (called from vulnerable.gd) snaps the
+## spin back and hides the weapon immediately.
+func _play_swing(player: CharacterBody3D) -> void:
+	if stats.swing_weapon_paths.is_empty():
+		return
+	player.play_ability_swing(stats.swing_weapon_paths, stats.swing_duration)
 
 func add_stack() -> void:
 	if stats == null or current_stacks >= stats.max_stacks:
@@ -67,6 +81,25 @@ func get_cooldown_remaining() -> float:
 ## For the HUD - true once the cooldown has finished and the ability can fire.
 func is_ready() -> bool:
 	return _cooldown_remaining <= 0.0
+
+## Timed-abilities test - keeps catching bodies that enter `area` for the
+## next `duration` seconds, not just whatever was already inside at the
+## instant the ability fired. Connects body_entered, filters to `group`,
+## calls `callback` with the body, and disconnects itself once the window
+## ends. Call this from _perform_effect() alongside the existing
+## get_overlapping_bodies() check (that check still matters for the very
+## first frame - body_entered only fires for bodies that enter AFTER this
+## connects). See Notes/TEST-TIMED-ABILITIES.md.
+func _watch_area_for_duration(area: Area3D, group: StringName, duration: float, callback: Callable) -> void:
+	var handler: Callable
+	handler = func(body: Node3D) -> void:
+		if body.is_in_group(group):
+			callback.call(body)
+	area.body_entered.connect(handler)
+	get_tree().create_timer(duration).timeout.connect(func() -> void:
+		if area.body_entered.is_connected(handler):
+			area.body_entered.disconnect(handler)
+	)
 
 ## Template Method hook - subclasses implement the actual gameplay effect.
 func _perform_effect(_player: CharacterBody3D, _area_scale: float) -> void:

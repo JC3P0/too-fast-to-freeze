@@ -32,12 +32,12 @@ script = ExtResource("1_rsi6c")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36715847, 0)
 shape = SubResource("CylinderShape3D_4v6n0")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1835498250]
+[node name="hammer_base" type="MeshInstance3D" parent="." unique_id=1835498250]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.77889776, 0)
 mesh = SubResource("CylinderMesh_1733b")
 surface_material_override/0 = SubResource("StandardMaterial3D_fon20")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=70842905]
+[node name="hammer_head" type="MeshInstance3D" parent="." unique_id=70842905]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3887492, 0)
 mesh = SubResource("BoxMesh_s17qu")
 surface_material_override/0 = SubResource("StandardMaterial3D_j48gh")

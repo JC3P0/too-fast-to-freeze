@@ -12,6 +12,10 @@ func set_player(player_instance):
 
 func enter_state():
 	player.animation_player.play("Hurt")
+	# Timed-abilities test - force any in-progress axe/saw/hammer swing to
+	# snap back and hide its weapon immediately on a hit. See
+	# Notes/TEST-TIMED-ABILITIES.md.
+	player.interrupt_ability_swing()
 	print("entered: vulnerable state")
 	player.player_speed = 0
 	#player.turn_direction = player.player_state_manager.player_helper.determine_turn_direction(player.turn_direction)

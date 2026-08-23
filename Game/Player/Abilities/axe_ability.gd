@@ -24,6 +24,10 @@ func _perform_effect(player: CharacterBody3D, _area_scale: float) -> void:
 	for body in area.get_overlapping_bodies():
 		if body.is_in_group("Tree"):
 			_cut_tree(body)
+	# Timed-abilities test - also catch trees the player skis into DURING the
+	# swing animation, not just whatever was already in range at the instant
+	# the button was pressed. See Notes/TEST-TIMED-ABILITIES.md.
+	_watch_area_for_duration(area, "Tree", stats.swing_duration, _cut_tree)
 
 func _cut_tree(tree: Node3D) -> void:
 	var shape := tree.get_node_or_null("CollisionShape3D")
@@ -41,4 +45,14 @@ func _sync_area_scale() -> void:
 		return
 	var area := player.get_node_or_null("AxeSwingArea") as Area3D
 	if area:
-		area.scale = Vector3.ONE * get_area_scale()
+		var scale_value := get_area_scale()
+		area.scale = Vector3.ONE * scale_value
+		# Timed-abilities test - AxeSwingArea scales uniformly on X/Y/Z as
+		# stacks grow, which would also stretch RangeRing's small ground
+		# offset upward. Counteract on the ring's own local Y so it stays
+		# flush on the snow and keeps a constant ring thickness at any stack
+		# count. See Notes/TEST-TIMED-ABILITIES.md.
+		var ring := area.get_node_or_null("RangeRing") as Node3D
+		if ring and scale_value != 0.0:
+			ring.scale.y = 1.0 / scale_value
+			ring.position.y = 0.05 / scale_value

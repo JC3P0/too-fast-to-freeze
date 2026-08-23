@@ -32,10 +32,10 @@ size = Vector3(1, 6.46594, 5.09808)
 
 [node name="Main" type="Node3D" unique_id=1624866221]
 
-[node name="Spawner" parent="." unique_id=2086976289 instance=ExtResource("2_ugmdt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -138.61215)
-
 [node name="Player" parent="." unique_id=662395417 instance=ExtResource("1_ix8k8")]
+
+[node name="Spawner" parent="." unique_id=2086976289 instance=ExtResource("2_ugmdt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -137.77081)
 
 [node name="Floor" type="StaticBody3D" parent="." unique_id=158111828]
 script = ExtResource("1_jn3mv")
