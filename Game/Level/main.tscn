@@ -72,3 +72,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.733, 0.533)
 shape = SubResource("BoxShape3D_yc0i2")
 
 [node name="WallHolder" type="Node3D" parent="." unique_id=265845086]
+
+[editable path="Spawner"]
