@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://dtqjpg20jqtkv"]
 
 [ext_resource type="Script" uid="uid://cbflemreqti4r" path="res://Game/Player/player.gd" id="1_ih0iw"]
-[ext_resource type="Script" path="res://Game/Player/combo_controller.gd" id="combo_controller"]
 [ext_resource type="Resource" uid="uid://2lyxmijs8ayx" path="res://Game/Data/player_stats.tres" id="2_6upfr"]
 [ext_resource type="PackedScene" uid="uid://bntvw807yp6np" path="res://Assets/Blender/Player4.blend" id="2_gb67c"]
 [ext_resource type="Script" uid="uid://crkuxkl0j5okf" path="res://Game/Player/States/player_state_manager.gd" id="3_852li"]
@@ -22,6 +21,7 @@
 [ext_resource type="Script" uid="uid://peg8tae5dhx" path="res://Game/Player/Abilities/saw_ability.gd" id="18_u78gx"]
 [ext_resource type="Resource" uid="uid://bb2hdk7prsmh8" path="res://Game/Data/hammer_stats.tres" id="19_rmqab"]
 [ext_resource type="Resource" uid="uid://btcrfy6lldlle" path="res://Game/Data/saw_stats.tres" id="21_vr2vl"]
+[ext_resource type="Script" uid="uid://bwety6a6udx5l" path="res://Game/Player/combo_controller.gd" id="combo_controller"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_54qhv"]
 
@@ -70,12 +70,11 @@ albedo_color = Color(1, 0.6, 0.1, 0.55)
 inner_radius = 3.035595
 outer_radius = 3.571289
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_86ark"]
-radius = 2.508789
+[sub_resource type="BoxShape3D" id="BoxShape3D_rmqab"]
+size = Vector3(2.1351624, 3.2792969, 6.1614757)
 
-[sub_resource type="TorusMesh" id="TorusMesh_hammerring"]
-inner_radius = 2.132471
-outer_radius = 2.508789
+[sub_resource type="BoxMesh" id="BoxMesh_hammerrange"]
+size = Vector3(2.1351624, 0.1, 6.1614757)
 
 [node name="Player" type="CharacterBody3D" unique_id=1863745662]
 script = ExtResource("1_ih0iw")
@@ -191,7 +190,7 @@ stats = ExtResource("19_rmqab")
 script = ExtResource("18_u78gx")
 stats = ExtResource("21_vr2vl")
 
-[node name="ComboController" type="Node" parent="."]
+[node name="ComboController" type="Node" parent="." unique_id=1739563438]
 script = ExtResource("combo_controller")
 
 [node name="AxeSwingArea" type="Area3D" parent="." unique_id=687171805]
@@ -213,14 +212,14 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HammerSwingArea" unique_id=1848302589]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2123773, -0.8440052)
-shape = SubResource("CylinderShape3D_86ark")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0020599365, 1.3520257, -2.1099)
+shape = SubResource("BoxShape3D_rmqab")
 
 [node name="RangeRing" type="MeshInstance3D" parent="HammerSwingArea" unique_id=1848302590]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.8440052)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0020599365, 0.05, -2.1099)
 visible = false
 material_override = SubResource("StandardMaterial3D_rangering")
-mesh = SubResource("TorusMesh_hammerring")
+mesh = SubResource("BoxMesh_hammerrange")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
