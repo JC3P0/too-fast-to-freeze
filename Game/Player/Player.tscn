@@ -60,9 +60,6 @@ _data = {
 height = 2.4838867
 radius = 3.571289
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_86ark"]
-radius = 2.508789
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rangering"]
 transparency = 1
 shading_mode = 0
@@ -71,6 +68,9 @@ albedo_color = Color(1, 0.6, 0.1, 0.55)
 [sub_resource type="TorusMesh" id="TorusMesh_axering"]
 inner_radius = 3.035595
 outer_radius = 3.571289
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_86ark"]
+radius = 2.508789
 
 [sub_resource type="TorusMesh" id="TorusMesh_hammerring"]
 inner_radius = 2.132471
@@ -201,8 +201,8 @@ shape = SubResource("CylinderShape3D_cdlqx")
 [node name="RangeRing" type="MeshInstance3D" parent="AxeSwingArea" unique_id=1066699240]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -1.7688314)
 visible = false
-mesh = SubResource("TorusMesh_axering")
 material_override = SubResource("StandardMaterial3D_rangering")
+mesh = SubResource("TorusMesh_axering")
 
 [node name="HammerSwingArea" type="Area3D" parent="." unique_id=802257321]
 collision_layer = 0
@@ -215,8 +215,8 @@ shape = SubResource("CylinderShape3D_86ark")
 [node name="RangeRing" type="MeshInstance3D" parent="HammerSwingArea" unique_id=1848302590]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.8440052)
 visible = false
-mesh = SubResource("TorusMesh_hammerring")
 material_override = SubResource("StandardMaterial3D_rangering")
+mesh = SubResource("TorusMesh_hammerring")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
