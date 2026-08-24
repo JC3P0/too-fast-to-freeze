@@ -66,3 +66,8 @@ signal ability_stack_changed(id: StringName, stacks: int)
 
 ## Fired whenever any ability successfully activates (button press, off cooldown).
 signal ability_fired(id: StringName)
+
+## Fired whenever combo state changes (started, extended, or completed) -
+## HUD listens to show/hide and update the combo label. See
+## Game/Player/combo_controller.gd.
+signal combo_changed(active: bool, count: int, time_remaining: float)

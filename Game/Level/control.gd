@@ -21,6 +21,16 @@ extends Control
 @onready var saw_cooldown_bar := get_node_or_null("ButtonSawBlade/CooldownBar") as ProgressBar
 @onready var hammer_cooldown_bar := get_node_or_null("ButtonHammer/CooldownBar") as ProgressBar
 
+## Combo system - Josh built these in the editor (PanelContainer2 >
+## ComboContainer > ComboCount/ComboTimer), read live every frame from the
+## player's ComboController rather than only on EventBus.combo_changed, so
+## the displayed timer visibly ticks down instead of looking frozen
+## between combo events. See Notes/TEST-TIMED-ABILITIES.md.
+@onready var combo_panel := get_node_or_null("PanelContainer2") as Control
+@onready var combo_count_label := get_node_or_null("PanelContainer2/ComboContainer/ComboCount") as Label
+@onready var combo_timer_label := get_node_or_null("PanelContainer2/ComboContainer/ComboTimer") as Label
+@onready var combo_bonus_label := get_node_or_null("PanelContainer2/ComboContainer/HeatBonus") as Label
+
 const _READY_COLOR := Color(0.5, 1.0, 0.5)
 const _COOLDOWN_COLOR := Color(0.55, 0.55, 0.55)
 
@@ -67,14 +77,37 @@ func _process(delta: float) -> void:
 	_update_ability_button(saw_button, saw_cooldown_bar, player.saw_ability)
 	_update_ability_button(hammer_button, hammer_cooldown_bar, player.hammer_ability)
 
+	_update_combo_labels()
+
+func _update_combo_labels() -> void:
+	if combo_panel == null or player == null:
+		return
+	var combo := player.get_node_or_null("ComboController")
+	if combo == null or not combo.combo_active:
+		combo_panel.visible = false
+		return
+	combo_panel.visible = true
+	if combo_count_label:
+		combo_count_label.text = "Combo count: %d" % combo.combo_count
+	if combo_timer_label:
+		combo_timer_label.text = "Combo timer: %.1fs" % max(0.0, combo.time_remaining)
+	if combo_bonus_label:
+		combo_bonus_label.text = "Heat bonus: +%.1fs" % combo.get_pending_bonus()
+
 func _on_stop_freeze_timer_timeout():
 	game_over_scene.show_game_over()
 	print("game_over!")
 
-func add_freeze_time():
-	var new_time = freeze_timer.time_left + coffee_time
-	if new_time > 60:
-		new_time = 60
+func add_freeze_time(amount: float = coffee_time) -> void:
+	## Timed-abilities test - generalized so any heat source (coffee,
+	## tree/boulder/snow-barrier breaks, combo bonus payouts) can add a
+	## different amount through the same clamped path, instead of each
+	## caller re-implementing the 60s cap. Negative amounts (getting hurt)
+	## also route through here and get floored at 0 instead of letting the
+	## Timer go negative. See Notes/TEST-TIMED-ABILITIES.md.
+	# Godot's Timer errors on wait_time <= 0, so floor at a tiny epsilon
+	# instead of 0 - still times out next frame, still triggers game over.
+	var new_time = clamp(freeze_timer.time_left + amount, 0.01, 60.0)
 	freeze_timer.wait_time = new_time
 	freeze_timer.start()
 

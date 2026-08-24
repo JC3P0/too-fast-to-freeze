@@ -2,10 +2,18 @@ class_name HammerAbility
 extends AbilityController
 
 ## Button-triggered hammer smash (test/timed-abilities branch).
-## Destroys any "Boulder" group body currently inside the player's
-## "HammerSwingArea" node (an Area3D sibling of this node, child of Player).
-## Boulders ONLY - confirmed, not trees, not snow barriers.
-## Area size kept in sync with get_area_scale() whenever a stack is added.
+## Destroys any "Boulder" or "SnowBarrier" group body currently inside the
+## player's "HammerSwingArea" node (an Area3D sibling of this node, child
+## of Player). Area size kept in sync with get_area_scale() whenever a
+## stack is added.
+##
+## Heat rewards (freeze-timer seconds, see Game/Level/control.gd's
+## add_freeze_time): boulders are 1/4 of what a coffee gives, snow barriers
+## are 1/8 - same as tree breaks via the axe. Snow barriers never interact
+## with the combo system (only boulders/trees do), they're heat-only.
+
+const _BOULDER_HEAT := 1.25
+const _SNOW_BARRIER_HEAT := 0.625
 
 func _ready() -> void:
 	super._ready()
@@ -15,7 +23,12 @@ func add_stack() -> void:
 	super.add_stack()
 	_sync_area_scale()
 
+var _player_ref: CharacterBody3D = null
+var _boulders_smashed_this_swing: int = 0
+
 func _perform_effect(player: CharacterBody3D, _area_scale: float) -> void:
+	_player_ref = player
+	_boulders_smashed_this_swing = 0
 	var area := player.get_node_or_null("HammerSwingArea") as Area3D
 	if area == null:
 		push_warning("HammerAbility: no 'HammerSwingArea' child on Player - add it in Player.tscn.")
@@ -23,10 +36,26 @@ func _perform_effect(player: CharacterBody3D, _area_scale: float) -> void:
 	for body in area.get_overlapping_bodies():
 		if body.is_in_group("Boulder"):
 			_smash_boulder(body)
-	# Timed-abilities test - also catch boulders the player skis into DURING
-	# the swing animation, not just whatever was already in range at the
-	# instant the button was pressed. See Notes/TEST-TIMED-ABILITIES.md.
+		elif body.is_in_group("SnowBarrier"):
+			_break_snow_barrier(body)
+	# Timed-abilities test - also catch boulders/snow barriers the player
+	# skis into DURING the swing animation, not just whatever was already
+	# in range at the instant the button was pressed. See
+	# Notes/TEST-TIMED-ABILITIES.md.
 	_watch_area_for_duration(area, "Boulder", stats.swing_duration, _smash_boulder)
+	_watch_area_for_duration(area, "SnowBarrier", stats.swing_duration, _break_snow_barrier)
+	# Combo system - snow barriers deliberately excluded, boulders only.
+	# Report the full swing's tally once the hit window closes, so
+	# boulders caught mid-swing above still count.
+	get_tree().create_timer(stats.swing_duration).timeout.connect(_report_swing_to_combo)
+
+func _report_swing_to_combo() -> void:
+	if _player_ref == null:
+		return
+	var combo := _player_ref.get_node_or_null("ComboController") as ComboController
+	if combo:
+		combo.report_boulder_swing(_boulders_smashed_this_swing)
+	_boulders_smashed_this_swing = 0
 
 func _smash_boulder(boulder: Node3D) -> void:
 	var shape := boulder.get_node_or_null("CollisionShape3D")
@@ -36,6 +65,22 @@ func _smash_boulder(boulder: Node3D) -> void:
 	tween.tween_property(boulder, "scale", Vector3.ONE * 0.001, 0.25) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(boulder.queue_free)
+	_boulders_smashed_this_swing += 1
+	_give_heat(_BOULDER_HEAT)
+
+func _break_snow_barrier(barrier: Node3D) -> void:
+	var shape := barrier.get_node_or_null("CollisionShape3D")
+	if shape:
+		shape.set_deferred("disabled", true)
+	var tween := barrier.create_tween().set_parallel(true)
+	tween.tween_property(barrier, "scale", Vector3.ONE * 0.001, 0.25) \
+		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	tween.chain().tween_callback(barrier.queue_free)
+	_give_heat(_SNOW_BARRIER_HEAT)
+
+func _give_heat(amount: float) -> void:
+	if _player_ref and "control" in _player_ref and _player_ref.control:
+		_player_ref.control.add_freeze_time(amount)
 
 func _sync_area_scale() -> void:
 	var player := get_parent()

@@ -91,18 +91,22 @@ func spawn_obstacle() -> void:
 
 	# Boulder chance and count both scale with hammer stacks. "Just enough
 	# rocks to be easy to clear but a few still slip through as the cooldown
-	# refreshes" - Josh, Notes/TEST-TIMED-ABILITIES.md. hammer_bonus is 0 at
-	# the start of a run, so this is an unchanged 30% chance for 1 boulder at
-	# 1 stack, ramping up toward more frequent, multi-boulder spawns by stack 10.
+	# refreshes" - Josh, Notes/TEST-TIMED-ABILITIES.md. Base bumped from 30%
+	# to 40% at 1 stack (combo system needs boulders showing up more often
+	# to be reachable), still ramping up toward more frequent, multi-boulder
+	# spawns by stack 10, same +4%/stack and 70% cap as before.
 	var hammer_bonus := hammer_stacks - 1
-	var boulder_chance: int = min(70, 30 + hammer_bonus * 4)
+	var boulder_chance: int = min(70, 40 + hammer_bonus * 4)
 	if number_of_boulders <= boulder_chance:
 		@warning_ignore("integer_division")
 		var boulder_count := 1 + int(hammer_bonus / 3)
 		for i in boulder_count:
 			_spawn(ObstacleFactory.ObstacleType.BOULDER, _rand_x_lane())
 
-	if number_of_coffees <= 20:
+	# Timed-abilities test - dropped from 20% to 10%. Breaking trees/boulders/
+	# snow barriers now also gives heat, and combos pay out a bonus on top,
+	# so coffee doesn't need to carry the whole recovery load by itself.
+	if number_of_coffees <= 10:
 		_spawn(ObstacleFactory.ObstacleType.COFFEE, _rand_x_pickup())
 
 	# Timed-abilities test - axe/saw/hammer pickup odds now reflect power:

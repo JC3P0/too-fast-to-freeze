@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dtqjpg20jqtkv"]
 
 [ext_resource type="Script" uid="uid://cbflemreqti4r" path="res://Game/Player/player.gd" id="1_ih0iw"]
+[ext_resource type="Script" path="res://Game/Player/combo_controller.gd" id="combo_controller"]
 [ext_resource type="Resource" uid="uid://2lyxmijs8ayx" path="res://Game/Data/player_stats.tres" id="2_6upfr"]
 [ext_resource type="PackedScene" uid="uid://bntvw807yp6np" path="res://Assets/Blender/Player4.blend" id="2_gb67c"]
 [ext_resource type="Script" uid="uid://crkuxkl0j5okf" path="res://Game/Player/States/player_state_manager.gd" id="3_852li"]
@@ -189,6 +190,9 @@ stats = ExtResource("19_rmqab")
 [node name="SawAbility" type="Node" parent="." unique_id=699010567]
 script = ExtResource("18_u78gx")
 stats = ExtResource("21_vr2vl")
+
+[node name="ComboController" type="Node" parent="."]
+script = ExtResource("combo_controller")
 
 [node name="AxeSwingArea" type="Area3D" parent="." unique_id=687171805]
 collision_layer = 0

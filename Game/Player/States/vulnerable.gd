@@ -10,6 +10,8 @@ func set_player(player_instance):
 	vuln_timer.connect("timeout", Callable(self, "_on_vuln_timer_timeout"))
 	player.add_child(vuln_timer)
 
+const _HURT_HEAT_LOSS := -3.0
+
 func enter_state():
 	player.animation_player.play("Hurt")
 	# Timed-abilities test - force any in-progress axe/saw/hammer swing to
@@ -18,6 +20,15 @@ func enter_state():
 	player.interrupt_ability_swing()
 	print("entered: vulnerable state")
 	player.player_speed = 0
+	# Timed-abilities test - getting hit costs a bit of heat too, floored at
+	# 0.01 by add_freeze_time() itself so this never errors the Timer.
+	if "control" in player and player.control:
+		player.control.add_freeze_time(_HURT_HEAT_LOSS)
+	# Combo system - getting hurt ends an active combo (still pays out
+	# whatever bonus it earned, see ComboController.on_hurt()).
+	var combo := player.get_node_or_null("ComboController") as ComboController
+	if combo:
+		combo.on_hurt()
 	#player.turn_direction = player.player_state_manager.player_helper.determine_turn_direction(player.turn_direction)
 	vuln_timer.start()
 
