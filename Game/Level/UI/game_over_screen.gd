@@ -45,7 +45,7 @@ func _populate_scores(scores: Array) -> void:
 
 	# Header row
 	var header := HBoxContainer.new()
-	for col in ["#", "Name", "Dist", "Date"]:
+	for col in ["#", "Name", "Dist", "Combo", "Date"]:
 		var h := Label.new()
 		h.text = col
 		h.add_theme_color_override("font_color", ICE_BLUE)
@@ -73,21 +73,27 @@ func _populate_scores(scores: Array) -> void:
 		dist_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		dist_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
+		var combo_lbl := Label.new()
+		combo_lbl.text = "x%d" % int(s.get("highest_combo", 0))
+		combo_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		combo_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
 		var date_lbl := Label.new()
 		date_lbl.text = _format_date(s.get("created_at", ""))
 		date_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		date_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 		if i == 0:
-			for lbl: Label in [rank, name_lbl, dist_lbl, date_lbl]:
+			for lbl: Label in [rank, name_lbl, dist_lbl, combo_lbl, date_lbl]:
 				lbl.add_theme_color_override("font_color", GOLD)
 		else:
-			for lbl: Label in [rank, name_lbl, dist_lbl, date_lbl]:
+			for lbl: Label in [rank, name_lbl, dist_lbl, combo_lbl, date_lbl]:
 				lbl.add_theme_color_override("font_color", ICE_BLUE)
 
 		row.add_child(rank)
 		row.add_child(name_lbl)
 		row.add_child(dist_lbl)
+		row.add_child(combo_lbl)
 		row.add_child(date_lbl)
 		scores_container.add_child(row)
 
@@ -106,8 +112,15 @@ func _on_submit_pressed() -> void:
 	submit_button.text = "Saving..."
 	name_input.editable = false
 
+	var highest_combo := 0
+	var run_player := get_tree().get_first_node_in_group("Player")
+	if run_player:
+		var combo := run_player.get_node_or_null("ComboController") as ComboController
+		if combo:
+			highest_combo = combo.highest_combo_this_run
+
 	HighscoreRepository.score_submitted.connect(_on_score_submitted, CONNECT_ONE_SHOT)
-	HighscoreRepository.submit_score(player_name, GlobalState.total_distance, GlobalState.current_phase)
+	HighscoreRepository.submit_score(player_name, GlobalState.total_distance, GlobalState.current_phase, highest_combo)
 
 func _on_score_submitted(success: bool, message: String) -> void:
 	if success:

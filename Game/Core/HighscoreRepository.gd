@@ -24,7 +24,7 @@ func _ready() -> void:
 
 # Fetch top 10 scores, sorted by distance descending
 func fetch_top_10() -> void:
-	var url := SUPABASE_URL + "/rest/v1/highscores?select=name,distance,created_at&order=distance.desc&limit=10"
+	var url := SUPABASE_URL + "/rest/v1/highscores?select=name,distance,highest_combo,created_at&order=distance.desc&limit=10"
 	var headers := PackedStringArray([
 		"apikey: " + SUPABASE_KEY,
 		"Authorization: Bearer " + SUPABASE_KEY
@@ -32,7 +32,7 @@ func fetch_top_10() -> void:
 	_http_get.request(url, headers)
 
 # Submit a score via the Edge Function (server validates + filters bad words)
-func submit_score(player_name: String, distance: float, phase: int) -> void:
+func submit_score(player_name: String, distance: float, phase: int, highest_combo: int = 0) -> void:
 	var url := SUPABASE_URL + "/functions/v1/submit-score"
 	var headers := PackedStringArray([
 		"apikey: " + SUPABASE_KEY,
@@ -42,7 +42,8 @@ func submit_score(player_name: String, distance: float, phase: int) -> void:
 	var body := JSON.stringify({
 		"name": player_name.to_upper(),
 		"distance": distance,
-		"phase": phase
+		"phase": phase,
+		"highest_combo": highest_combo
 	})
 	_http_post.request(url, headers, HTTPClient.METHOD_POST, body)
 
