@@ -25,9 +25,21 @@ func add_stack() -> void:
 var _player_ref: CharacterBody3D = null
 var _trees_cut_this_swing: int = 0
 
+## Combo system - true if a combo was already running the instant this
+## swing began. When true, each tree cut during the swing reports to
+## ComboController immediately (see _cut_tree()) instead of waiting for
+## the deferred end-of-swing report below, so a hit landing right as the
+## combo timer is about to hit 0 doesn't lose its credit to the 0.5s
+## report delay. When false, the deferred report still handles it - a
+## brand new combo needs the whole swing's tally to check the >=3 trees
+## start threshold, which isn't known until the swing window closes.
+var _combo_active_at_swing_start: bool = false
+
 func _perform_effect(player: CharacterBody3D, _area_scale: float) -> void:
 	_player_ref = player
 	_trees_cut_this_swing = 0
+	var combo := player.get_node_or_null("ComboController") as ComboController
+	_combo_active_at_swing_start = combo != null and combo.combo_active
 	var area := player.get_node_or_null("AxeSwingArea") as Area3D
 	if area == null:
 		push_warning("AxeAbility: no 'AxeSwingArea' child on Player - add it in Player.tscn.")
@@ -39,9 +51,11 @@ func _perform_effect(player: CharacterBody3D, _area_scale: float) -> void:
 	# swing animation, not just whatever was already in range at the instant
 	# the button was pressed. See Notes/TEST-TIMED-ABILITIES.md.
 	_watch_area_for_duration(area, "Tree", stats.swing_duration, _cut_tree)
-	# Combo system - report the full swing's tally to ComboController once
-	# the hit window closes, so trees caught mid-swing above still count.
-	get_tree().create_timer(stats.swing_duration).timeout.connect(_report_swing_to_combo)
+	# Combo system - only need the deferred, whole-swing report when this
+	# swing might be starting a fresh combo. If one's already active, every
+	# tree cut this swing already reported itself live via _cut_tree().
+	if not _combo_active_at_swing_start:
+		get_tree().create_timer(stats.swing_duration).timeout.connect(_report_swing_to_combo)
 
 func _report_swing_to_combo() -> void:
 	if _player_ref == null:
@@ -72,6 +86,13 @@ func _cut_tree(tree: Node3D) -> void:
 	_trees_cut_this_swing += 1
 	if _player_ref and "control" in _player_ref and _player_ref.control:
 		_player_ref.control.add_freeze_time(_TREE_HEAT)
+	# Combo system - see _combo_active_at_swing_start above. An already
+	# active combo gets extended the instant this tree falls, not at the
+	# end of the swing.
+	if _combo_active_at_swing_start:
+		var combo := _player_ref.get_node_or_null("ComboController") as ComboController
+		if combo:
+			combo.report_tree_swing(1)
 
 func _sync_area_scale() -> void:
 	var player := get_parent()

@@ -26,9 +26,19 @@ func add_stack() -> void:
 var _player_ref: CharacterBody3D = null
 var _boulders_smashed_this_swing: int = 0
 
+## Combo system - true if a combo was already running the instant this
+## swing began. See the matching flag/comment in axe_ability.gd - same
+## reasoning: an already-active combo gets extended live, per boulder, in
+## _smash_boulder() below, instead of waiting on the deferred end-of-swing
+## report. That deferred report still runs when this is false, since
+## starting a fresh combo needs the swing's full tally.
+var _combo_active_at_swing_start: bool = false
+
 func _perform_effect(player: CharacterBody3D, _area_scale: float) -> void:
 	_player_ref = player
 	_boulders_smashed_this_swing = 0
+	var combo := player.get_node_or_null("ComboController") as ComboController
+	_combo_active_at_swing_start = combo != null and combo.combo_active
 	var area := player.get_node_or_null("HammerSwingArea") as Area3D
 	if area == null:
 		push_warning("HammerAbility: no 'HammerSwingArea' child on Player - add it in Player.tscn.")
@@ -45,9 +55,11 @@ func _perform_effect(player: CharacterBody3D, _area_scale: float) -> void:
 	_watch_area_for_duration(area, "Boulder", stats.swing_duration, _smash_boulder)
 	_watch_area_for_duration(area, "SnowBarrier", stats.swing_duration, _break_snow_barrier)
 	# Combo system - snow barriers deliberately excluded, boulders only.
-	# Report the full swing's tally once the hit window closes, so
-	# boulders caught mid-swing above still count.
-	get_tree().create_timer(stats.swing_duration).timeout.connect(_report_swing_to_combo)
+	# Only need the deferred, whole-swing report when this swing might be
+	# starting a fresh combo - if one's already active, every boulder
+	# smashed this swing already reported itself live via _smash_boulder().
+	if not _combo_active_at_swing_start:
+		get_tree().create_timer(stats.swing_duration).timeout.connect(_report_swing_to_combo)
 
 func _report_swing_to_combo() -> void:
 	if _player_ref == null:
@@ -73,6 +85,13 @@ func _smash_boulder(boulder: Node3D) -> void:
 	tween.chain().tween_callback(boulder.queue_free)
 	_boulders_smashed_this_swing += 1
 	_give_heat(_BOULDER_HEAT)
+	# Combo system - see _combo_active_at_swing_start above. An already
+	# active combo gets extended the instant this boulder breaks, not at
+	# the end of the swing.
+	if _combo_active_at_swing_start:
+		var combo := _player_ref.get_node_or_null("ComboController") as ComboController
+		if combo:
+			combo.report_boulder_swing(1)
 
 func _break_snow_barrier(barrier: Node3D) -> void:
 	var shape := barrier.get_node_or_null("CollisionShape3D")
