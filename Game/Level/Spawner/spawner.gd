@@ -51,12 +51,21 @@ func spawn_obstacle() -> void:
 	# start_stacks (1 each) so nothing breaks if the player isn't found yet.
 	var hammer_stacks := 1
 	var axe_saw_stacks := 2
+	# Timed-abilities test - once an ability hits stats.max_stacks there's
+	# nothing left for its pickup to do, so stop spawning it entirely
+	# instead of just letting it roll uselessly.
+	var axe_maxed := false
+	var saw_maxed := false
+	var hammer_maxed := false
 	var player := _get_player()
 	if player:
 		if "hammer_ability" in player and player.hammer_ability:
 			hammer_stacks = player.hammer_ability.current_stacks
+			hammer_maxed = player.hammer_ability.is_maxed()
 		if "axe_ability" in player and "saw_ability" in player and player.axe_ability and player.saw_ability:
 			axe_saw_stacks = player.axe_ability.current_stacks + player.saw_ability.current_stacks
+			axe_maxed = player.axe_ability.is_maxed()
+			saw_maxed = player.saw_ability.is_maxed()
 
 	# Tree count scales with combined axe+saw stacks. tree_bonus is 0 at the
 	# start of a run (both abilities start at 1 stack = 2 combined), so the
@@ -109,22 +118,29 @@ func spawn_obstacle() -> void:
 	if number_of_coffees <= 10:
 		_spawn(ObstacleFactory.ObstacleType.COFFEE, _rand_x_pickup())
 
-	# Timed-abilities test - axe/saw/hammer pickup odds now reflect power:
-	# axe is weakest so it's the most common, saw is the strongest ability so
-	# it's the rarest, hammer sits in the middle on both counts.
-	var number_of_axes := randi_range(1, 100)
-	if number_of_axes <= 20:
-		_spawn(ObstacleFactory.ObstacleType.AXE, _rand_x_pickup())
+	# Timed-abilities test - axe/saw/hammer pickup odds. Axe and hammer now
+	# sit even (both feed the combo system directly), saw stays the rarest
+	# since it's the strongest ability and doesn't interact with combos at
+	# all. Each roll is skipped once that ability is maxed (axe_maxed/
+	# saw_maxed/hammer_maxed above).
+	if not axe_maxed:
+		var number_of_axes := randi_range(1, 100)
+		if number_of_axes <= 20:
+			_spawn(ObstacleFactory.ObstacleType.AXE, _rand_x_pickup())
 
-	var number_of_saws := randi_range(1, 100)
-	if number_of_saws <= 8:
-		_spawn(ObstacleFactory.ObstacleType.SAW_PICKUP, _rand_x_pickup())
+	if not saw_maxed:
+		var number_of_saws := randi_range(1, 100)
+		if number_of_saws <= 8:
+			_spawn(ObstacleFactory.ObstacleType.SAW_PICKUP, _rand_x_pickup())
 
 	# Hammer pickup - flat-chance roll, same shape as axe/saw above. Boulder
 	# scaling off hammer_stacks is handled above now (Notes/TEST-TIMED-ABILITIES.md).
-	var number_of_hammers := randi_range(1, 100)
-	if number_of_hammers <= 14:
-		_spawn(ObstacleFactory.ObstacleType.HAMMER, _rand_x_pickup())
+	# Raised from 14 to 20 to match axe now that hammer is just as much a
+	# combo necessity.
+	if not hammer_maxed:
+		var number_of_hammers := randi_range(1, 100)
+		if number_of_hammers <= 20:
+			_spawn(ObstacleFactory.ObstacleType.HAMMER, _rand_x_pickup())
 
 
 ## Timed-abilities test - finds and caches the Player node so

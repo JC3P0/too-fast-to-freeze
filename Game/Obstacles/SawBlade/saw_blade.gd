@@ -65,6 +65,13 @@ func _cut_tree(tree: Node3D) -> void:
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(tree.queue_free)
 	_hits += 1
+	# Timed-abilities test - report each cut live to the player's combo,
+	# if one is running. Small per-cut extend, see combo_controller.gd's
+	# report_saw_tree_cut() for why this is live instead of batched.
+	if _player:
+		var combo := _player.get_node_or_null("ComboController") as ComboController
+		if combo:
+			combo.report_saw_tree_cut()
 	if _hits >= max_hits:
 		_destroy_blade()
 
