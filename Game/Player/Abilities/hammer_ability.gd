@@ -52,6 +52,12 @@ func _perform_effect(player: CharacterBody3D, _area_scale: float) -> void:
 func _report_swing_to_combo() -> void:
 	if _player_ref == null:
 		return
+	# Combo system fix - see the matching comment in axe_ability.gd. Same
+	# fix here: don't let a delayed swing report resurrect a combo right
+	# after a hit already ended it.
+	if _player_ref.player_state_manager.current_state_name == "Vuln":
+		_boulders_smashed_this_swing = 0
+		return
 	var combo := _player_ref.get_node_or_null("ComboController") as ComboController
 	if combo:
 		combo.report_boulder_swing(_boulders_smashed_this_swing)

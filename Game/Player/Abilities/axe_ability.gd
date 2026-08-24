@@ -46,6 +46,15 @@ func _perform_effect(player: CharacterBody3D, _area_scale: float) -> void:
 func _report_swing_to_combo() -> void:
 	if _player_ref == null:
 		return
+	# Combo system fix - if the player got hit partway through this swing,
+	# on_hurt() already ended whatever combo was active. This report timer
+	# runs independently of that hit, so without this check it could
+	# resurrect a brand new combo right on top of the one that just ended.
+	# Vuln lasts 1.5s vs. this 0.5s swing window, so checking state here
+	# reliably catches "hit during this swing" and just drops the tally.
+	if _player_ref.player_state_manager.current_state_name == "Vuln":
+		_trees_cut_this_swing = 0
+		return
 	var combo := _player_ref.get_node_or_null("ComboController") as ComboController
 	if combo:
 		combo.report_tree_swing(_trees_cut_this_swing)
