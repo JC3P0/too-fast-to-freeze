@@ -11,3 +11,5 @@ Notes/
 .idea/
 
 supabase/
+
+*.import
