@@ -197,7 +197,7 @@ shape = SubResource("CapsuleShape3D_54qhv")
 [node name="Player4" parent="." unique_id=1084285411 instance=ExtResource("2_gb67c")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
-[node name="Skeleton3D" parent="Player4/Armature" parent_id_path=PackedInt32Array(1084285411, 1867407883) index="0" unique_id=52839830]
+[node name="Skeleton3D" parent="Player4/Armature" parent_id_path=PackedInt32Array(1084285411, 1596964647) index="0" unique_id=1243464921]
 bones/0/position = Vector3(0, -0.010638773, 0)
 bones/0/rotation = Quaternion(0.005253466, 0, -1.1665037e-18, 0.9999862)
 bones/1/rotation = Quaternion(-0.064634286, -1.761442e-24, 1.4351691e-17, 0.997909)
@@ -212,25 +212,25 @@ bones/10/rotation = Quaternion(0.044635642, 0.044417784, -0.013204555, 0.997928)
 bones/13/rotation = Quaternion(0.14035647, 0.7279459, -0.17060933, 0.6490665)
 bones/14/rotation = Quaternion(0.044635657, -0.044417784, 0.013204553, 0.997928)
 
-[node name="hammer_base" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/LeftArmLeftLower" parent_id_path=PackedInt32Array(1084285411, 911601590) index="0" unique_id=352281963]
+[node name="hammer_base" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/LeftArmLeftLower" parent_id_path=PackedInt32Array(1084285411, 1208578894) index="0" unique_id=352281963]
 transform = Transform3D(0.36499998, -2.2563295e-08, 9.346028e-09, 2.2563299e-08, 0.25809395, -0.25809395, 9.346021e-09, 0.25809395, 0.25809395, 0.5263209, 0.2502439, 0.7794617)
 visible = false
 mesh = SubResource("CylinderMesh_cdlqx")
 surface_material_override/0 = SubResource("StandardMaterial3D_rmqab")
 
-[node name="hammer_head" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/LeftArmLeftLower" parent_id_path=PackedInt32Array(1084285411, 911601590) index="1" unique_id=277583746]
+[node name="hammer_head" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/LeftArmLeftLower" parent_id_path=PackedInt32Array(1084285411, 1208578894) index="1" unique_id=277583746]
 transform = Transform3D(-2.5300677e-08, -2.2563293e-08, 0.36499995, 0.25809392, 0.25809392, 3.384494e-08, -0.25809392, 0.25809392, -1.935625e-09, 0.5263209, 0.43087494, 0.9600927)
 visible = false
 mesh = SubResource("BoxMesh_vr2vl")
 surface_material_override/0 = SubResource("StandardMaterial3D_hgjse")
 
-[node name="axe_base" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/RightArmLeftLower" parent_id_path=PackedInt32Array(1084285411, 1817779305) index="0" unique_id=2052875772]
+[node name="axe_base" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/RightArmLeftLower" parent_id_path=PackedInt32Array(1084285411, 548706251) index="0" unique_id=2052875772]
 transform = Transform3D(-1.1103639e-08, -2.1855698e-08, -0.353, -0.17349999, 0.43301266, -7.715064e-09, 0.3005108, 0.24999999, -1.7497364e-08, -0.54151815, 0.15311766, 0.65517753)
 visible = false
 mesh = SubResource("BoxMesh_cdlqx")
 skeleton = NodePath("../..")
 
-[node name="axe_head" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/RightArmLeftLower" parent_id_path=PackedInt32Array(1084285411, 1817779305) index="1" unique_id=1608464237]
+[node name="axe_head" type="MeshInstance3D" parent="Player4/Armature/Skeleton3D/RightArmLeftLower" parent_id_path=PackedInt32Array(1084285411, 548706251) index="1" unique_id=1608464237]
 transform = Transform3D(0.34699997, 5.856222e-09, 1.5430121e-08, 1.5167853e-08, -0.25000003, -0.30570692, 4.064219e-09, 0.4330127, -0.1765, -0.55003154, 0.4790455, 0.96964246)
 visible = false
 mesh = SubResource("PrismMesh_rmqab")
@@ -332,12 +332,14 @@ transform = Transform3D(0.9795259, -0.20131724, -8.799857e-09, 0, -4.371138e-08,
 
 [node name="Axe2" parent="ToolHolder/AxePivot" unique_id=917385828 instance=ExtResource("23_hgjse")]
 transform = Transform3D(-1.5104888e-08, 0.20000002, 3.019916e-08, 0.20000002, 1.5104888e-08, -8.7422745e-09, -8.742277e-09, 3.019916e-08, -0.2, 1.8354437, 0.0015403436, 0)
+visible = false
 
 [node name="HammerPivot" type="Node3D" parent="ToolHolder" unique_id=835429041]
 transform = Transform3D(-6.760672e-08, 1.11304015e-08, -0.9049999, -0.6442282, 0.6356059, 5.5943328e-08, 0.6356059, 0.6442282, -3.9558802e-08, 0, 1, -0.6155312)
 
 [node name="Hammer2" parent="ToolHolder/HammerPivot" unique_id=815492338 instance=ExtResource("24_3rqyv")]
 transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 0, 0.9615054, 0)
+visible = false
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]

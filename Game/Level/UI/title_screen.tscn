@@ -23,19 +23,15 @@ script = ExtResource("4_efe5r")
 [node name="TitleScreenPlayer" parent="." unique_id=2122339803 instance=ExtResource("1_s7psy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.621679, 0, 0.811446)
 
-[node name="Skeleton3D" parent="TitleScreenPlayer/Armature" index="0"]
-bones/2/rotation = Quaternion(8.43187e-08, 8.43009e-08, -0.762365, 0.647147)
-bones/3/rotation = Quaternion(-0.158883, 0.0534015, -0.388518, 0.906067)
-bones/4/rotation = Quaternion(0.289065, -0.0689749, -0.101663, 0.949394)
-bones/6/rotation = Quaternion(8.43187e-08, -8.43009e-08, 0.762365, 0.647147)
-bones/7/rotation = Quaternion(7.69775e-08, -7.29613e-08, 0.419667, 0.907678)
-bones/8/rotation = Quaternion(0.509077, 0.23765, 0.0156072, 0.827115)
-bones/10/rotation = Quaternion(0.583393, 0.489259, 0.496081, 0.417352)
-bones/10/scale = Vector3(1, 1, 1)
-bones/11/rotation = Quaternion(0.00333382, -0.00293441, 0.660744, 0.750598)
-bones/13/rotation = Quaternion(0.5934, -0.525577, -0.455915, 0.404705)
-bones/13/scale = Vector3(1, 1, 1)
-bones/14/rotation = Quaternion(0.00287743, 0.00338311, -0.761778, 0.647823)
+[node name="Skeleton3D" parent="TitleScreenPlayer/Armature" parent_id_path=PackedInt32Array(2122339803, 1803972115) index="0" unique_id=1993890891]
+bones/2/rotation = Quaternion(0.583393, 0.4892588, 0.4960808, 0.4173516)
+bones/3/rotation = Quaternion(0.0033338238, -0.0029344135, 0.66074413, 0.75059813)
+bones/5/rotation = Quaternion(0.5933995, -0.5255776, -0.45591542, 0.40470538)
+bones/6/rotation = Quaternion(0.0028774268, 0.0033831105, -0.7617779, 0.6478232)
+bones/9/rotation = Quaternion(-0.15888318, 0.05340148, -0.38851845, 0.9060673)
+bones/10/rotation = Quaternion(0.28906533, -0.06897493, -0.101663314, 0.94939363)
+bones/13/rotation = Quaternion(7.69775e-08, -7.296129e-08, 0.4196666, 0.90767837)
+bones/14/rotation = Quaternion(0.50907695, 0.23765048, 0.01560717, 0.82711506)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=782023762]
 transform = Transform3D(0.214906, -0.458924, 0.862093, -0.141, 0.858891, 0.492368, -0.966403, -0.227368, 0.119872, -39.6502, -15.4034, -16.3974)
