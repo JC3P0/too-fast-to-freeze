@@ -70,34 +70,6 @@ size = Vector3(2.1351624, 3.2792969, 6.1614757)
 [sub_resource type="BoxMesh" id="BoxMesh_hammerrange"]
 size = Vector3(2.1351624, 0.1, 6.1614757)
 
-[sub_resource type="Animation" id="Animation_on0lv"]
-resource_name = "AxeSwing"
-length = 0.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AxePivot:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.16666667, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(-1.5707964, 0.20270254, 0), Vector3(-1.5707964, -0.19257967, 0), Vector3(-1.5707964, 2.9389424, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("AxePivot:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
-}
-
 [sub_resource type="Animation" id="Animation_jexcd"]
 resource_name = "HammerSwing"
 length = 0.5
@@ -111,7 +83,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.26666668, 0.5),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(-6.181584e-08, -1.5707964, -0.7921351), Vector3(-7.360869e-08, -1.5707964, -1.1715174), Vector3(8.2978964e-08, -1.5707963, 1.6827242)]
+"values": [Vector3(0, -1.5707964, -0.1572996), Vector3(-6.181584e-08, -1.5707964, -0.7921351), Vector3(8.2978964e-08, -1.5707963, 1.6827242)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -127,11 +99,74 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_dcs4t"]
+resource_name = "RESET"
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("AxePivot:rotation")
+tracks/0/path = NodePath("HammerPivot:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, -1.5707964, -0.1572996)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HammerPivot:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_cptj8"]
+_data = {
+&"HammerSwing": SubResource("Animation_jexcd"),
+&"RESET": SubResource("Animation_dcs4t")
+}
+
+[sub_resource type="Animation" id="Animation_on0lv"]
+resource_name = "AxeSwing"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(-1.5707964, 0.20270254, 0), Vector3(-1.5707964, -0.19257967, 0), Vector3(-1.5707964, 2.9389424, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_axeleft_reset"]
+resource_name = "RESET"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -143,45 +178,82 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("AxePivot:visible")
+tracks/1/path = NodePath(".:visible")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("HammerPivot:rotation")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_axeleft"]
+_data = {
+&"AxeSwing": SubResource("Animation_on0lv"),
+&"RESET": SubResource("Animation_axeleft_reset")
+}
+
+[sub_resource type="Animation" id="Animation_axeswingright"]
+resource_name = "AxeSwingRight"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(1.5707964, 2.9388874, 0), Vector3(1.5707964, 3.3341727, 0), Vector3(1.5707964, 0.2026473, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+
+[sub_resource type="Animation" id="Animation_axeright_reset"]
+resource_name = "RESET"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-6.181584e-08, -1.5707964, -0.7921351)]
+"values": [Vector3(1.5707964, 2.9388874, 0)]
 }
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("HammerPivot:visible")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [false]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_cptj8"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_axeright"]
 _data = {
-&"AxeSwing": SubResource("Animation_on0lv"),
-&"HammerSwing": SubResource("Animation_jexcd"),
-&"RESET": SubResource("Animation_dcs4t")
+&"AxeSwingRight": SubResource("Animation_axeswingright"),
+&"RESET": SubResource("Animation_axeright_reset")
 }
 
 [node name="Player" type="CharacterBody3D" unique_id=1863745662]
@@ -242,6 +314,7 @@ surface_material_override/0 = SubResource("StandardMaterial3D_vr2vl")
 [node name="snow_trail_idle" parent="." unique_id=484289561 instance=ExtResource("4_ssr2j")]
 
 [node name="soft_trail_particles" parent="." unique_id=1384117169 instance=ExtResource("5_ej26e")]
+visible = false
 
 [node name="Player_state_manager" type="Node" parent="." unique_id=1576056380]
 script = ExtResource("3_852li")
@@ -327,19 +400,32 @@ mesh = SubResource("BoxMesh_hammerrange")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ToolHolder" unique_id=980324768]
 libraries/ = SubResource("AnimationLibrary_cptj8")
 
-[node name="AxePivot" type="Node3D" parent="ToolHolder" unique_id=723215467]
+[node name="AxePivotLeft" type="Node3D" parent="ToolHolder" unique_id=723215467]
 transform = Transform3D(0.9795259, -0.20131724, -8.799857e-09, 0, -4.371138e-08, 1, -0.20131724, -0.9795259, -4.2816446e-08, 0, 0.9724374, 0)
-
-[node name="Axe2" parent="ToolHolder/AxePivot" unique_id=917385828 instance=ExtResource("23_hgjse")]
-transform = Transform3D(-1.5104888e-08, 0.20000002, 3.019916e-08, 0.20000002, 1.5104888e-08, -8.7422745e-09, -8.742277e-09, 3.019916e-08, -0.2, 1.8354437, 0.0015403436, 0)
 visible = false
+
+[node name="Axe2" parent="ToolHolder/AxePivotLeft" unique_id=917385828 instance=ExtResource("23_hgjse")]
+transform = Transform3D(-1.5104888e-08, 0.20000002, 3.019916e-08, 0.20000002, 1.5104888e-08, -8.7422745e-09, -8.742277e-09, 3.019916e-08, -0.2, 1.8354437, 0.0015403436, 0)
+
+[node name="SwingPlayer" type="AnimationPlayer" parent="ToolHolder/AxePivotLeft" unique_id=230943377]
+libraries/ = SubResource("AnimationLibrary_axeleft")
+
+[node name="AxePivotRight" type="Node3D" parent="ToolHolder" unique_id=542306840]
+transform = Transform3D(-0.979525, 0.20131989, -8.799976e-09, 0, -4.3711367e-08, -1, -0.20131989, -0.979525, 4.281642e-08, 0, 0.9724374, 0)
+visible = false
+
+[node name="Axe2" parent="ToolHolder/AxePivotRight" unique_id=1871496624 instance=ExtResource("23_hgjse")]
+transform = Transform3D(-1.5104888e-08, 0.20000002, 3.019916e-08, 0.20000002, 1.5104888e-08, -8.7422745e-09, -8.742277e-09, 3.019916e-08, -0.2, 1.8354437, 0.0015403436, 0)
+
+[node name="SwingPlayer" type="AnimationPlayer" parent="ToolHolder/AxePivotRight" unique_id=258012741]
+libraries/ = SubResource("AnimationLibrary_axeright")
 
 [node name="HammerPivot" type="Node3D" parent="ToolHolder" unique_id=835429041]
-transform = Transform3D(-6.760672e-08, 1.11304015e-08, -0.9049999, -0.6442282, 0.6356059, 5.5943328e-08, 0.6356059, 0.6442282, -3.9558802e-08, 0, 1, -0.6155312)
+transform = Transform3D(-3.9070407e-08, -6.196955e-09, -0.9049999, -0.1417698, 0.8938268, 0, 0.8938268, 0.1417698, -3.9558802e-08, 0, 1, -0.6155312)
+visible = false
 
 [node name="Hammer2" parent="ToolHolder/HammerPivot" unique_id=815492338 instance=ExtResource("24_3rqyv")]
-transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 0, 0.9615054, 0)
-visible = false
+transform = Transform3D(0.165, 0, 0, 0, 0.165, 0, 0, 0, 0.165, -0.205563, 2.061218, -0.087335)
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]

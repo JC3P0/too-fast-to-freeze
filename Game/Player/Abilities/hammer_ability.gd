@@ -14,6 +14,12 @@ extends AbilityController
 
 const _BOULDER_HEAT := 1.25
 const _SNOW_BARRIER_HEAT := 0.625
+## Hammer2's tuned base scale under HammerPivot in Player.tscn (matches the
+## hammer pickup's own mesh scale - see Notes/AXE-SWING-MIRROR-MATH.md for
+## why the position offset is what it is). Visual mesh scale at any stack
+## count is this times get_area_scale(), same growth factor as the
+## invisible HammerSwingArea hitbox below.
+const _HAMMER_MESH_BASE_SCALE := 0.165
 
 func _ready() -> void:
 	super._ready()
@@ -107,6 +113,12 @@ func _give_heat(amount: float) -> void:
 	if _player_ref and "control" in _player_ref and _player_ref.control:
 		_player_ref.control.add_freeze_time(amount)
 
+## New AnimationPlayer-based hammer swing (test/timed-abilities branch),
+## replacing the inherited full-body-spin _play_swing() - see
+## player.play_hammer_swing().
+func _play_swing(player: CharacterBody3D) -> void:
+	player.play_hammer_swing()
+
 func _sync_area_scale() -> void:
 	var player := get_parent()
 	if player == null:
@@ -124,3 +136,9 @@ func _sync_area_scale() -> void:
 		if ring and scale_value != 0.0:
 			ring.scale.y = 1.0 / scale_value
 			ring.position.y = 0.05 / scale_value
+	# Grow the visible hammer mesh by the same factor as the hitbox above,
+	# so a maxed-out hammer looks - and reaches - proportionally bigger,
+	# same idea as SawAbility scaling its blade.
+	var hammer_mesh := player.get_node_or_null("ToolHolder/HammerPivot/Hammer2") as Node3D
+	if hammer_mesh:
+		hammer_mesh.scale = Vector3.ONE * (_HAMMER_MESH_BASE_SCALE * get_area_scale())

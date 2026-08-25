@@ -13,6 +13,11 @@ extends AbilityController
 ## heat - only the axe (and hammer, for boulders/snow barriers) do.
 
 const _TREE_HEAT := 0.625
+## Axe2's tuned base scale under both AxePivotLeft/AxePivotRight in
+## Player.tscn (matches the axe pickup's own mesh scale). Visual mesh scale
+## at any stack count is this times get_area_scale(), same growth factor
+## as the invisible AxeSwingArea hitbox above.
+const _AXE_MESH_BASE_SCALE := 0.2
 
 func _ready() -> void:
 	super._ready()
@@ -94,6 +99,11 @@ func _cut_tree(tree: Node3D) -> void:
 		if combo:
 			combo.report_tree_swing(1)
 
+## New SwingPlayer-based axe swing (test/timed-abilities branch), replacing
+## the inherited full-body-spin _play_swing() - see player.play_axe_swing().
+func _play_swing(player: CharacterBody3D) -> void:
+	player.play_axe_swing()
+
 func _sync_area_scale() -> void:
 	var player := get_parent()
 	if player == null:
@@ -111,3 +121,11 @@ func _sync_area_scale() -> void:
 		if ring and scale_value != 0.0:
 			ring.scale.y = 1.0 / scale_value
 			ring.position.y = 0.05 / scale_value
+	# Grow the visible axe mesh on both pivots by the same factor as the
+	# hitbox above, so a maxed-out axe looks - and reaches - proportionally
+	# bigger, same idea as SawAbility scaling its blade.
+	var mesh_scale_value := get_area_scale()
+	for pivot_name in ["AxePivotLeft", "AxePivotRight"]:
+		var axe_mesh := player.get_node_or_null("ToolHolder/%s/Axe2" % pivot_name) as Node3D
+		if axe_mesh:
+			axe_mesh.scale = Vector3.ONE * (_AXE_MESH_BASE_SCALE * mesh_scale_value)

@@ -164,6 +164,86 @@ func interrupt_ability_swing() -> void:
 	for weapon in _swing_weapons:
 		weapon.visible = false
 	_swing_weapons.clear()
+	# New SwingPlayer-based axe/hammer swings (see play_axe_swing() and
+	# play_hammer_swing() below) - stop and hide immediately too, same as
+	# the old spin system above, in case a hit lands mid-swing.
+	for pivot_path in ["ToolHolder/AxePivotLeft", "ToolHolder/AxePivotRight"]:
+		var pivot := get_node_or_null(pivot_path) as Node3D
+		if pivot:
+			var swing_player := pivot.get_node_or_null("SwingPlayer") as AnimationPlayer
+			if swing_player:
+				swing_player.stop()
+			pivot.visible = false
+	var hammer_pivot := get_node_or_null("ToolHolder/HammerPivot") as Node3D
+	if hammer_pivot:
+		var hammer_player := get_node_or_null("ToolHolder/AnimationPlayer") as AnimationPlayer
+		if hammer_player:
+			hammer_player.stop()
+		hammer_pivot.visible = false
+	var axe_ring := get_node_or_null("AxeSwingArea/RangeRing") as Node3D
+	if axe_ring:
+		axe_ring.visible = false
+	var hammer_ring := get_node_or_null("HammerSwingArea/RangeRing") as Node3D
+	if hammer_ring:
+		hammer_ring.visible = false
+
+## New SwingPlayer-based axe swing (test/timed-abilities branch), replacing
+## the old play_ability_swing() full-body spin for axe specifically -
+## called from AxeAbility._play_swing(). Picks AxeSwing (left) or
+## AxeSwingRight based on the same player_direction.x steering signal
+## play_ability_swing() and the saw's blade.setup() already use. Dead
+## center (straight ahead, x == 0.0) defaults to the left swing, per Josh.
+func play_axe_swing() -> void:
+	# Confirmed by testing: player_direction.x >= 0.0 is what actually
+	# corresponds to the left-hand swing on screen for this rig (the old
+	# spin system's "negative x = steering left" convention does not carry
+	# over directly). Dead center (x == 0.0) still defaults to the left
+	# swing, per Josh.
+	var facing_left: bool = player_direction.x >= 0.0
+	var pivot_path := "ToolHolder/AxePivotLeft" if facing_left else "ToolHolder/AxePivotRight"
+	var anim_name := "AxeSwing" if facing_left else "AxeSwingRight"
+	var pivot := get_node_or_null(pivot_path) as Node3D
+	var swing_player := get_node_or_null(pivot_path + "/SwingPlayer") as AnimationPlayer
+	if pivot == null or swing_player == null:
+		return
+	# The OTHER side's pivot may still be visible/mid-animation from a
+	# swing that got cut short - make sure only one side shows at a time.
+	var other_pivot_path := "ToolHolder/AxePivotRight" if facing_left else "ToolHolder/AxePivotLeft"
+	var other_pivot := get_node_or_null(other_pivot_path) as Node3D
+	if other_pivot:
+		var other_swing_player := other_pivot.get_node_or_null("SwingPlayer") as AnimationPlayer
+		if other_swing_player:
+			other_swing_player.stop()
+		other_pivot.visible = false
+	swing_player.stop()
+	swing_player.play(anim_name)
+	# Debug/testing - flash the AxeSwingArea range ring for the duration of
+	# the swing, same visual the old spin system gave via swing_weapon_paths.
+	# Josh wants this kept for testing the hitbox against the swing.
+	var axe_ring := get_node_or_null("AxeSwingArea/RangeRing") as Node3D
+	if axe_ring:
+		axe_ring.visible = true
+		var hide_axe_ring := func(_anim_name: StringName) -> void:
+			axe_ring.visible = false
+		swing_player.animation_finished.connect(hide_axe_ring, CONNECT_ONE_SHOT)
+
+## New AnimationPlayer-based hammer swing (test/timed-abilities branch),
+## replacing the old play_ability_swing() full-body spin for hammer
+## specifically - called from HammerAbility._play_swing(). No left/right
+## needed, the hammer comes down overhead the same way either way.
+func play_hammer_swing() -> void:
+	var hammer_player := get_node_or_null("ToolHolder/AnimationPlayer") as AnimationPlayer
+	if hammer_player == null:
+		return
+	hammer_player.stop()
+	hammer_player.play("HammerSwing")
+	# Debug/testing - same range ring flash as play_axe_swing() above.
+	var hammer_ring := get_node_or_null("HammerSwingArea/RangeRing") as Node3D
+	if hammer_ring:
+		hammer_ring.visible = true
+		var hide_hammer_ring := func(_anim_name: StringName) -> void:
+			hammer_ring.visible = false
+		hammer_player.animation_finished.connect(hide_hammer_ring, CONNECT_ONE_SHOT)
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
