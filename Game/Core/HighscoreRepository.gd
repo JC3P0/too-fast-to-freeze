@@ -16,10 +16,20 @@ func _ready() -> void:
 
 	_http_get = HTTPRequest.new()
 	add_child(_http_get)
+	# Web export fix - HTTPRequest's accept_gzip defaults to true, which is
+	# fine on desktop (Godot's own HTTP client handles the decompression),
+	# but on Web export the request actually goes through the browser's
+	# fetch, which already transparently decompresses gzip responses before
+	# Godot ever sees them. With accept_gzip still on, Godot then tries to
+	# gzip-decompress an already-decompressed body, which corrupts it and
+	# breaks the JSON parse below. Supabase's responses come back gzipped,
+	# so this must be off for the web build to read scores at all.
+	_http_get.accept_gzip = false
 	_http_get.request_completed.connect(_on_get_completed)
 
 	_http_post = HTTPRequest.new()
 	add_child(_http_post)
+	_http_post.accept_gzip = false
 	_http_post.request_completed.connect(_on_post_completed)
 
 # Fetch top 10 scores, sorted by distance descending
