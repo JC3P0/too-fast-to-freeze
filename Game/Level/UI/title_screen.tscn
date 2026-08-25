@@ -73,14 +73,13 @@ size_flags_vertical = 1
 theme_override_font_sizes/font_size = 77
 text = " Too Fast
  To Freeze "
-autowrap_mode = 2
 
 [node name="Menu" type="PanelContainer" parent="Title_Options" unique_id=2010921730]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 444.0
-offset_right = 358.0
-offset_bottom = 613.0
+offset_left = 80.0
+offset_top = 394.0
+offset_right = 360.0
+offset_bottom = 563.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Title_Options/Menu" unique_id=905111666]
 layout_mode = 2
@@ -100,6 +99,10 @@ focus_neighbor_top = NodePath("../start_button")
 focus_neighbor_bottom = NodePath("../credits_button")
 text = "Options
 "
+
+[node name="how_to_play" type="Button" parent="Title_Options/Menu/VBoxContainer" unique_id=763589996]
+layout_mode = 2
+text = "How to Play"
 
 [node name="credits_button" type="Button" parent="Title_Options/Menu/VBoxContainer" unique_id=1460650793]
 layout_mode = 2
@@ -136,7 +139,7 @@ grow_vertical = 2
 [node name="Label" type="Label" parent="Title_Options/CreditPanel/VBoxContainer" unique_id=1191089053]
 layout_mode = 2
 size_flags_vertical = 6
-text = "CREIDTS"
+text = "CREDITS"
 horizontal_alignment = 1
 
 [node name="Label2" type="Label" parent="Title_Options/CreditPanel/VBoxContainer" unique_id=1286983467]
@@ -149,10 +152,71 @@ horizontal_alignment = 1
 [node name="Label3" type="Label" parent="Title_Options/CreditPanel/VBoxContainer" unique_id=811271712]
 layout_mode = 2
 size_flags_vertical = 6
+text = "Music
+Karl Casey @ White Bat Audio"
 horizontal_alignment = 1
+
+[node name="HowToPlayPanel" type="Panel" parent="Title_Options" unique_id=1263283984]
+visible = false
+layout_mode = 0
+offset_left = 491.0
+offset_top = 2.0
+offset_right = 1011.0
+offset_bottom = 647.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Title_Options/HowToPlayPanel" unique_id=425059718]
+layout_mode = 0
+offset_right = 519.0
+offset_bottom = 652.0
+
+[node name="controls" type="Label" parent="Title_Options/HowToPlayPanel/VBoxContainer" unique_id=863975659]
+layout_mode = 2
+text = "Controls"
+horizontal_alignment = 1
+
+[node name="controls_info" type="Label" parent="Title_Options/HowToPlayPanel/VBoxContainer" unique_id=1263443676]
+layout_mode = 2
+text = "Movement
+Mouse: Click and drag
+Keyboard:  A = left, D = right
+Gamepad: Joypad left or right stick
+Abilities
+Mouse: On screen buttons
+Keyboard: Space = Axe, E = Hammer, Q = Saw
+Gamepad: A = Axe, B = Hammer, X = Saw"
+
+[node name="ablility" type="Label" parent="Title_Options/HowToPlayPanel/VBoxContainer" unique_id=1535291652]
+layout_mode = 2
+text = "Abilities"
+horizontal_alignment = 1
+
+[node name="abilitiy_info" type="Label" parent="Title_Options/HowToPlayPanel/VBoxContainer" unique_id=1444234358]
+layout_mode = 2
+text = "Axe : swings and destroys any Tree in range. Base cooldown 3.2s.   
+Each tree cut refunds 0.625s off your freeze timer (heat).
+Hammer: swings and destroys any Boulder or Snow Barrier in 
+range. Base cooldown 3.9s. Boulders refund 1.25s of heat 
+each; snow barriers refund 0.625s each.
+Saw: fires a spinning blade forward that flies through trees, 
+cutting up to 6 of them (grows by 1 per stack, capped at 16), 
+and gets destroyed outright if it hits a Boulder. Base 
+cooldown 6.5s."
+
+[node name="combo" type="Label" parent="Title_Options/HowToPlayPanel/VBoxContainer" unique_id=903586307]
+layout_mode = 2
+text = "Combos"
+horizontal_alignment = 1
+
+[node name="combo_info" type="Label" parent="Title_Options/HowToPlayPanel/VBoxContainer" unique_id=1881553315]
+layout_mode = 2
+text = "Combo: Cut 3+ trees in one axe swing (or smash 1 boulder) 
+to start it. Keep chopping/smashing to extend it before the 
+shrinking timer runs out. Ends on timeout or a hit, paying up 
+to 6s bonus heat."
 
 [connection signal="pressed" from="Title_Options/Menu/VBoxContainer/start_button" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="Title_Options/Menu/VBoxContainer/options_button" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="Title_Options/Menu/VBoxContainer/how_to_play" to="." method="_on_how_to_play_pressed"]
 [connection signal="pressed" from="Title_Options/Menu/VBoxContainer/credits_button" to="." method="_on_credits_button_pressed"]
 
 [editable path="TitleScreenPlayer"]
